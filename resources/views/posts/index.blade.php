@@ -31,12 +31,12 @@
                 <article
                     class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                     <div class="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                        <span class="text-6xl">{{$item->photo}}</span>
+                        <img src="{{ Storage::url($item->photo) }}" alt="{{ $item->title }}" class="object-cover h-full w-full">
                     </div>
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-3">
                             <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full">
-                                {{ $item->slag }}
+                                {{ $item->slug }}
                             </span>
                             <span class="text-gray-500 text-sm">5 min czytania</span>
                         </div>

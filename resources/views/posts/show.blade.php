@@ -6,7 +6,9 @@
         <article class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
             <!-- Featured Image -->
             <div class="h-96 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                <span class="text-9xl">{{ $post->photo }}</span>
+                {{-- <span class="text-9xl">{{ $post->photo }}</span> --}}
+                <img src="{{ Storage::url($post->photo) }}" alt="{{ $post->title }}" class="object-cover h-full w-full">
+                
             </div>
 
             <!-- Post Content -->
