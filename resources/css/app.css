@@ -1,3 +1,21 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  /* Category colors - ensure they are always available */
+  --color-category-blue-bg: #dbeafe;
+  --color-category-blue-text: #1e40af;
+  --color-category-green-bg: #dcfce7;
+  --color-category-green-text: #166534;
+  --color-category-purple-bg: #f3e8ff;
+  --color-category-purple-text: #7c3aed;
+  --color-category-red-bg: #fee2e2;
+  --color-category-red-text: #dc2626;
+  --color-category-yellow-bg: #fef3c7;
+  --color-category-yellow-text: #a16207;
+  --color-category-indigo-bg: #e0e7ff;
+  --color-category-indigo-text: #4338ca;
+  --color-category-pink-bg: #fce7f3;
+  --color-category-pink-text: #be185d;
+  --color-category-gray-bg: #f3f4f6;
+  --color-category-gray-text: #374151;
+}

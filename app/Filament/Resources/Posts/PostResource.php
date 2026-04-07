@@ -21,6 +21,14 @@ class PostResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
     protected static ?string $recordTitleAttribute = 'title';
+    
+    protected static ?string $navigationLabel = 'Posty';
+    
+    protected static ?string $modelLabel = 'Post';
+    
+    protected static ?string $pluralModelLabel = 'Posty';
+
+    protected static ?int $navigationSort = 1;
 
     public static function form(Schema $schema): Schema
     {
@@ -35,7 +43,7 @@ class PostResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            \App\Filament\Resources\Posts\RelationManagers\CommentsRelationManager::class,
         ];
     }
 
