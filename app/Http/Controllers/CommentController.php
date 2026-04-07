@@ -19,7 +19,7 @@ class CommentController extends Controller
                 'content' => ['required', 'string', 'max:1000'],
             ]);
             
-            Comment::create([
+            $comment = Comment::create([
                 'post_id' => $post->id,
                 'user_id' => Auth::id(),
                 'content' => $parameters['content'],
@@ -34,7 +34,7 @@ class CommentController extends Controller
                 'content' => ['required', 'string', 'max:1000'],
             ]);
 
-            Comment::create([
+            $comment = Comment::create([
                 'post_id' => $post->id,
                 'author_name' => $parameters['author_name'],
                 'author_email' => $parameters['author_email'],
@@ -45,8 +45,25 @@ class CommentController extends Controller
             $message = 'Komentarz został wysłany i oczekuje na moderację. Zostanie opublikowany po zatwierdzeniu przez administratora.';
         }
 
+        // If this is an AJAX request, return JSON
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'comment' => [
+                    'id' => $comment->id,
+                    'author_name' => $comment->author_display_name,
+                    'content' => $comment->content,
+                    'is_from_logged_user' => $comment->isFromLoggedUser(),
+                    'is_approved' => $comment->is_approved,
+                    'created_at' => $comment->created_at->format('d.m.Y H:i'),
+                ]
+            ]);
+        }
+
         return redirect()->route('posts.show', $id)
-            ->with('success', $message);
+            ->with('success', $message)
+            ->with('cache_buster', time());
     }
 
     public function loadMore(Request $request, string $postId)

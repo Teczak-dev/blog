@@ -204,6 +204,8 @@ class PostController extends Controller
             'read_time_minutes' => $readTime,
         ]);
 
-        return redirect()->route('posts.show', $post->id)->with('success', 'Post został zaktualizowany!');
+        return redirect()->route('posts.show', $post->id)
+            ->with('success', 'Post został zaktualizowany!')
+            ->with('cache_buster', time());
     }
 }
