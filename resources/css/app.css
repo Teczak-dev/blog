@@ -1,21 +1,59 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@theme {
-  /* Category colors - ensure they are always available */
-  --color-category-blue-bg: #dbeafe;
-  --color-category-blue-text: #1e40af;
-  --color-category-green-bg: #dcfce7;
-  --color-category-green-text: #166534;
-  --color-category-purple-bg: #f3e8ff;
-  --color-category-purple-text: #7c3aed;
-  --color-category-red-bg: #fee2e2;
-  --color-category-red-text: #dc2626;
-  --color-category-yellow-bg: #fef3c7;
-  --color-category-yellow-text: #a16207;
-  --color-category-indigo-bg: #e0e7ff;
-  --color-category-indigo-text: #4338ca;
-  --color-category-pink-bg: #fce7f3;
-  --color-category-pink-text: #be185d;
-  --color-category-gray-bg: #f3f4f6;
-  --color-category-gray-text: #374151;
+@layer base {
+  /* Base styles to satisfy Tailwind v4 */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* CSS Variables for Filament compatibility */
+  :root {
+    --spacing: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --font-weight-thin: 100;
+    --font-weight-extralight: 200;
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+    --font-weight-black: 900;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --gray-950: #030712;
+    --primary-400: #60a5fa;
+    --color-primary-400: var(--primary-400);
+  }
+}
+
+@layer components {
+  /* Category color utilities for dynamic categories */
+  .bg-category-blue { background-color: #dbeafe; color: #1e40af; }
+  .bg-category-green { background-color: #dcfce7; color: #166534; }
+  .bg-category-purple { background-color: #f3e8ff; color: #7c3aed; }
+  .bg-category-red { background-color: #fee2e2; color: #dc2626; }
+  .bg-category-yellow { background-color: #fef3c7; color: #a16207; }
+  .bg-category-indigo { background-color: #e0e7ff; color: #4338ca; }
+  .bg-category-pink { background-color: #fce7f3; color: #be185d; }
+  .bg-category-gray { background-color: #f3f4f6; color: #374151; }
 }
