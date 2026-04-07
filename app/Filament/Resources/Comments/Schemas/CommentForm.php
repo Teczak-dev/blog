@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\Comments\Schemas;
 
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class CommentForm
@@ -14,36 +15,24 @@ class CommentForm
     {
         return $schema
             ->components([
-                Section::make('Informacje o komentarzu')
-                    ->schema([
-                        Select::make('post_id')
-                            ->label('Post')
-                            ->relationship('post', 'title')
-                            ->searchable()
-                            ->preload()
-                            ->required(),
-                            
-                        TextInput::make('author_name')
-                            ->label('Imię i nazwisko autora')
-                            ->required()
-                            ->maxLength(255),
-                            
-                        TextInput::make('author_email')
-                            ->label('Adres e-mail autora')
-                            ->email()
-                            ->required()
-                            ->maxLength(255),
-                    ]),
-                    
-                Section::make('Treść komentarza')
-                    ->schema([
-                        Textarea::make('content')
-                            ->label('Treść')
-                            ->required()
-                            ->rows(4)
-                            ->maxLength(1000)
-                            ->columnSpanFull(),
-                    ]),
+                Select::make('post_id')
+                    ->relationship('post', 'title')
+                    ->required(),
+                TextInput::make('author_name')
+                    ->required(),
+                TextInput::make('author_email')
+                    ->email()
+                    ->required(),
+                Textarea::make('content')
+                    ->required()
+                    ->columnSpanFull(),
+                Select::make('user_id')
+                    ->relationship('user', 'name'),
+                Toggle::make('is_approved')
+                    ->required(),
+                TextInput::make('approved_by')
+                    ->numeric(),
+                DateTimePicker::make('approved_at'),
             ]);
     }
 }

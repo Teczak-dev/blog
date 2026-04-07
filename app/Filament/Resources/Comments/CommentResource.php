@@ -5,7 +5,9 @@ namespace App\Filament\Resources\Comments;
 use App\Filament\Resources\Comments\Pages\CreateComment;
 use App\Filament\Resources\Comments\Pages\EditComment;
 use App\Filament\Resources\Comments\Pages\ListComments;
+use App\Filament\Resources\Comments\Pages\ViewComment;
 use App\Filament\Resources\Comments\Schemas\CommentForm;
+use App\Filament\Resources\Comments\Schemas\CommentInfolist;
 use App\Filament\Resources\Comments\Tables\CommentsTable;
 use App\Models\Comment;
 use BackedEnum;
@@ -18,21 +20,24 @@ class CommentResource extends Resource
 {
     protected static ?string $model = Comment::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
-
-    protected static ?string $recordTitleAttribute = 'author_name';
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChatBubbleLeftEllipsis;
     
     protected static ?string $navigationLabel = 'Komentarze';
     
-    protected static ?string $modelLabel = 'Komentarz';
+    protected static ?string $modelLabel = 'komentarz';
     
-    protected static ?string $pluralModelLabel = 'Komentarze';
-
+    protected static ?string $pluralModelLabel = 'komentarze';
+    
     protected static ?int $navigationSort = 3;
 
     public static function form(Schema $schema): Schema
     {
         return CommentForm::configure($schema);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return CommentInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
@@ -51,7 +56,7 @@ class CommentResource extends Resource
     {
         return [
             'index' => ListComments::route('/'),
-            'create' => CreateComment::route('/create'),
+            'view' => ViewComment::route('/{record}'),
             'edit' => EditComment::route('/{record}/edit'),
         ];
     }

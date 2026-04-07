@@ -7,10 +7,10 @@
     <title>Blog - Lista Postów</title>
 
     @if(app()->environment('local'))
-        @vite(['resources/css/app.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
-        <link rel="stylesheet" href="{{ asset('build/assets/app-DD8ZUld4.css') }}">
-        <script type="module" src="{{ asset('build/assets/app-Due1s3iS.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('build/assets/app-7pegMoxU.css') }}">
+        <script type="module" src="{{ asset('build/assets/app-DxiZ9_49.js') }}"></script>
     @endif
 </head>
 
@@ -20,8 +20,6 @@
     {{ $slot }}
 
     @include('partials.footer')
-
-    @vite(['resources/js/app.js'])
 </body>
 
 </html>

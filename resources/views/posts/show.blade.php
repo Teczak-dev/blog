@@ -135,100 +135,154 @@
         <!-- Comments Section -->
         <section class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">
-                Komentarze ({{ $post->comments->count() }})
+                Komentarze ({{ $post->approvedComments()->count() }})
             </h2>
-
-            @if(session('success'))
-                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
 
             <!-- Comment Form -->
             <div class="mb-8 pb-8 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Dodaj komentarz</h3>
-                <form method="POST" action="{{ route('comments.store', $post->id) }}" class="space-y-4">
-                    @csrf
-                    <!-- Name -->
-                    <div>
-                        <label for="author_name" class="block text-sm font-medium text-gray-700 mb-2">
-                            Twoje imię *
-                        </label>
-                        <input type="text" id="author_name" name="author_name" required
-                            value="{{ old('author_name') }}"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            placeholder="Jan Kowalski">
-                        @error('author_name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                
+                @if (auth()->check())
+                    <!-- Logged user form -->
+                    <form method="POST" action="{{ route('comments.store', $post->id) }}" class="space-y-4">
+                        @csrf
+                        <div>
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                                Komentarz *
+                            </label>
+                            <textarea id="content" name="content" required rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
+                            @error('content')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
-                    <!-- Email -->
-                    <div>
-                        <label for="author_email" class="block text-sm font-medium text-gray-700 mb-2">
-                            Email *
-                        </label>
-                        <input type="email" id="author_email" name="author_email" required
-                            value="{{ old('author_email') }}"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-                            placeholder="jan@example.com">
-                        <p class="mt-1 text-sm text-gray-500">Email nie będzie publikowany</p>
-                        @error('author_email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <div class="flex items-center gap-4">
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
+                                Opublikuj komentarz
+                            </button>
+                            <p class="text-sm text-gray-500">Zalogowany jako <strong>{{ auth()->user()->name }}</strong></p>
+                        </div>
+                    </form>
+                @else
+                    <!-- Guest user form -->
+                    <form method="POST" action="{{ route('comments.store', $post->id) }}" class="space-y-4">
+                        @csrf
+                        
+                        <!-- Info about moderation -->
+                        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-4">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-blue-700">
+                                        Twój komentarz zostanie opublikowany po zatwierdzeniu przez administratora. 
+                                        <a href="{{ route('login') }}" class="underline hover:no-underline">Zaloguj się</a> 
+                                        aby komentować bez moderacji.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
 
-                    <!-- Comment Content -->
-                    <div>
-                        <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
-                            Komentarz *
-                        </label>
-                        <textarea id="content" name="content" required rows="5"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-                            placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
-                        @error('content')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- Name -->
+                            <div>
+                                <label for="author_name" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Twoje imię *
+                                </label>
+                                <input type="text" id="author_name" name="author_name" required
+                                    value="{{ old('author_name') }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                    placeholder="Jan Kowalski">
+                                @error('author_name')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
 
-                    <!-- Submit Button -->
-                    <div class="flex items-center gap-4">
-                        <button type="submit"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                            Opublikuj komentarz
-                        </button>
-                        <p class="text-sm text-gray-500">* Pola wymagane</p>
-                    </div>
-                </form>
+                            <!-- Email -->
+                            <div>
+                                <label for="author_email" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Email *
+                                </label>
+                                <input type="email" id="author_email" name="author_email" required
+                                    value="{{ old('author_email') }}"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                                    placeholder="jan@example.com">
+                                <p class="mt-1 text-sm text-gray-500">Email nie będzie publikowany</p>
+                                @error('author_email')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <!-- Comment Content -->
+                        <div>
+                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                                Komentarz *
+                            </label>
+                            <textarea id="content" name="content" required rows="4"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
+                            @error('content')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="flex items-center gap-4">
+                            <button type="submit"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                </svg>
+                                Wyślij komentarz
+                            </button>
+                            <p class="text-sm text-gray-500">* Pola wymagane</p>
+                        </div>
+                    </form>
+                @endif
             </div>
 
             <!-- Comments List -->
-            <div class="space-y-6">
-                @forelse($post->comments->sortByDesc('created_at') as $comment)
-                    <div class="flex gap-4">
-                        <div class="flex-shrink-0">
-                            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                {{ strtoupper(substr($comment->author_name, 0, 2)) }}
-                            </div>
-                        </div>
-                        <div class="flex-1">
-                            <div class="bg-gray-50 rounded-lg p-4">
-                                <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-semibold text-gray-900">{{ $comment->author_name }}</h4>
-                                    <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
-                                </div>
-                                <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $comment->content }}</div>
-                            </div>
-                        </div>
+            <div id="comments-container">
+                @php
+                    $approvedComments = $post->approvedComments()->take(3)->get();
+                    $totalComments = $post->approvedComments()->count();
+                @endphp
+                
+                @if($totalComments > 0)
+                    <div id="comments-list" class="space-y-6">
+                        @foreach($approvedComments as $comment)
+                            <x-comment :comment="$comment" />
+                        @endforeach
                     </div>
-                @empty
+                    
+                    @if($totalComments > 3)
+                        <div class="text-center mt-6">
+                            <button id="load-more-comments" 
+                                data-post-id="{{ $post->id }}"
+                                data-offset="3"
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-all duration-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                </svg>
+                                Pokaż więcej komentarzy ({{ $totalComments - 3 }})
+                            </button>
+                        </div>
+                    @endif
+                @else
                     <div class="text-center py-8 text-gray-500">
                         <p>Brak komentarzy. Bądź pierwszy który skomentuje ten post!</p>
                     </div>
-                @endforelse
+                @endif
             </div>
         </section>
 

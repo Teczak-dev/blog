@@ -3,19 +3,17 @@
 namespace App\Filament\Resources\Comments\Pages;
 
 use App\Filament\Resources\Comments\CommentResource;
-use Filament\Actions\DeleteAction;
-use Filament\Actions\ViewAction;
-use Filament\Resources\Pages\EditRecord;
+use Filament\Actions\EditAction;
+use Filament\Resources\Pages\ViewRecord;
 
-class EditComment extends EditRecord
+class ViewComment extends ViewRecord
 {
     protected static string $resource = CommentResource::class;
 
     protected function getHeaderActions(): array
     {
         return [
-            ViewAction::make(),
-            DeleteAction::make(),
+            EditAction::make(),
         ];
     }
 }
