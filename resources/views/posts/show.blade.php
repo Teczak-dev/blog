@@ -16,12 +16,35 @@
 
             <!-- Post Content -->
             <div class="p-8">
-                <a href="{{ route('posts.index') }}" class="text-sm text-gray-500 hover:text-gray-700 mb-4 inline-block">
-                    &larr; Powrót do listy artykułów
-                </a>
-                <a href="{{ route('posts.edit', $post->slug) }}" class="text-sm text-blue-600 hover:text-blue-800 mb-4 inline-block">
-                    Edytuj artykuł
-                </a>
+                <div class="flex items-center justify-between mb-4">
+                    <a href="{{ route('posts.index') }}" class="text-sm text-gray-500 hover:text-gray-700 inline-flex items-center">
+                        ← Powrót do listy artykułów
+                    </a>
+                    
+                    @if (auth()->check() && auth()->id() === $post->user_id)
+                        <a href="{{ route('posts.edit', $post->slug) }}" 
+                           class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-lg font-medium text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                            ✏️ Edytuj post
+                        </a>
+                    @endif
+                </div>
+
+                <!-- Success Message -->
+                @if (session('success'))
+                    <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-green-700">{{ session('success') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                
                 <!-- Meta Info -->
                 <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
                     <div class="flex items-center gap-3">

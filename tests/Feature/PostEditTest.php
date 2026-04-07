@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -8,7 +9,10 @@ use Illuminate\Support\Facades\Storage;
 uses(RefreshDatabase::class);
 
 it('can display edit form for existing post', function () {
-    $post = Post::factory()->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->create(['user_id' => $user->id]);
+    
+    $this->actingAs($user);
 
     $response = $this->get("/posts/{$post->slug}/edit");
 
@@ -19,15 +23,18 @@ it('can display edit form for existing post', function () {
 });
 
 it('can update a post without changing photo', function () {
+    $user = User::factory()->create();
     $post = Post::factory()->create([
         'title' => 'Original Title',
-        'content' => 'Original Content'
+        'content' => 'Original Content',
+        'user_id' => $user->id,
     ]);
+    
+    $this->actingAs($user);
 
     $response = $this->put("/posts/{$post->slug}", [
         'title' => 'Updated Title',
         'slug' => $post->slug,
-        'author' => $post->author,
         'lead' => 'Updated lead',
         'content' => 'Updated Content',
     ]);
@@ -42,17 +49,23 @@ it('can update a post without changing photo', function () {
 
 it('can update a post with new photo', function () {
     Storage::fake('public');
+    $user = User::factory()->create();
+    
     $oldPhoto = UploadedFile::fake()->image('old.jpg');
     $oldPhotoPath = $oldPhoto->store('posts', 'public');
 
-    $post = Post::factory()->create(['photo' => $oldPhotoPath]);
+    $post = Post::factory()->create([
+        'photo' => $oldPhotoPath,
+        'user_id' => $user->id,
+    ]);
+    
+    $this->actingAs($user);
 
     $newPhoto = UploadedFile::fake()->image('new.jpg');
 
     $response = $this->put("/posts/{$post->slug}", [
         'title' => $post->title,
         'slug' => $post->slug,
-        'author' => $post->author,
         'content' => $post->content,
         'photo' => $newPhoto,
     ]);
@@ -66,12 +79,14 @@ it('can update a post with new photo', function () {
 });
 
 it('validates edit form inputs', function ($field, $value, $expectedError) {
-    $post = Post::factory()->create();
+    $user = User::factory()->create();
+    $post = Post::factory()->create(['user_id' => $user->id]);
+    
+    $this->actingAs($user);
 
     $validData = [
         'title' => 'Valid Title',
         'slug' => $post->slug,
-        'author' => 'Valid Author',
         'content' => 'Valid Content',
     ];
 
@@ -83,18 +98,22 @@ it('validates edit form inputs', function ($field, $value, $expectedError) {
 })->with([
     'empty title' => ['title', '', 'required'],
     'too long title' => ['title', str_repeat('a', 256), 'max'],
-    'empty author' => ['author', '', 'required'],
     'empty content' => ['content', '', 'required'],
     'invalid photo' => ['photo', 'not-a-file', 'image'],
 ]);
 
 it('can update slug to new unique value', function () {
-    $post = Post::factory()->create(['slug' => 'original-slug']);
+    $user = User::factory()->create();
+    $post = Post::factory()->create([
+        'slug' => 'original-slug',
+        'user_id' => $user->id,
+    ]);
+    
+    $this->actingAs($user);
 
     $response = $this->put("/posts/{$post->slug}", [
         'title' => $post->title,
         'slug' => 'new-unique-slug',
-        'author' => $post->author,
         'content' => $post->content,
     ]);
 
@@ -105,13 +124,18 @@ it('can update slug to new unique value', function () {
 });
 
 it('prevents updating to duplicate slug', function () {
+    $user = User::factory()->create();
     $existingPost = Post::factory()->create(['slug' => 'existing-slug']);
-    $post = Post::factory()->create(['slug' => 'original-slug']);
+    $post = Post::factory()->create([
+        'slug' => 'original-slug',
+        'user_id' => $user->id,
+    ]);
+    
+    $this->actingAs($user);
 
     $response = $this->put("/posts/{$post->slug}", [
         'title' => $post->title,
         'slug' => 'existing-slug',
-        'author' => $post->author,
         'content' => $post->content,
     ]);
 

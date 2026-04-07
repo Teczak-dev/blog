@@ -5,10 +5,40 @@
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <!-- Header -->
-        <div class="mb-8">
-            <h2 class="text-3xl font-bold text-gray-900">Najnowsze Posty</h2>
-            <p class="mt-2 text-gray-600">Odkryj najnowsze artykuły z świata programowania</p>
+        <div class="mb-8 flex items-center justify-between">
+            <div>
+                <h2 class="text-3xl font-bold text-gray-900">Najnowsze Posty</h2>
+                <p class="mt-2 text-gray-600">Odkryj najnowsze artykuły z świata programowania</p>
+            </div>
+            
+            @if (auth()->check())
+                <a href="{{ route('posts.create') }}" 
+                   class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                    ✍️ Napisz nowy post
+                </a>
+            @else
+                <a href="{{ route('login') }}" 
+                   class="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                    🔑 Zaloguj się aby pisać
+                </a>
+            @endif
         </div>
+
+        <!-- Success Message -->
+        @if (session('success'))
+            <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-green-700">{{ session('success') }}</p>
+                    </div>
+                </div>
+            </div>
+        @endif
 
         <!-- Filters/Search Bar -->
         <div class="mb-6 flex flex-col sm:flex-row gap-4">
@@ -25,8 +55,9 @@
         </div>
 
         <!-- Posts Grid -->
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-             @foreach ($posts as $item)
+        @if($posts->count() > 0)
+            <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                @foreach ($posts as $item)
                 <!-- Post Card X -->
                 <article
                     class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
@@ -64,6 +95,34 @@
                     </div>
                 </article>
             @endforeach
+        @else
+            <!-- Empty State -->
+            <div class="text-center py-16">
+                <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                    <span class="text-4xl">📝</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">Brak postów</h3>
+                <p class="text-gray-600 mb-6 max-w-sm mx-auto">
+                    Nie ma jeszcze żadnych postów do wyświetlenia. 
+                    @if (auth()->check())
+                        Napisz pierwszy post!
+                    @else
+                        Zaloguj się, aby napisać pierwszy post!
+                    @endif
+                </p>
+                @if (auth()->check())
+                    <a href="{{ route('posts.create') }}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all transform hover:scale-105">
+                        ✍️ Napisz pierwszy post
+                    </a>
+                @else
+                    <a href="{{ route('login') }}" 
+                       class="inline-flex items-center px-6 py-3 border border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all">
+                        🔑 Zaloguj się
+                    </a>
+                @endif
+            </div>
+        @endif
 
             {{-- <!-- Post Card 2 -->
             <article

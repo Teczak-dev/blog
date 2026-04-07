@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -9,13 +10,15 @@ uses(RefreshDatabase::class);
 
 it('can create a post with photo upload', function () {
     Storage::fake('public');
+    
+    $user = User::factory()->create();
+    $this->actingAs($user);
 
     $photo = UploadedFile::fake()->image('test-post.jpg', 800, 600);
 
     $response = $this->post('/posts', [
         'title' => 'Test Post with Photo',
         'slug' => 'test-post-with-photo',
-        'author' => 'Test Author',
         'lead' => 'This is a test lead',
         'content' => 'This is test content',
         'photo' => $photo,
@@ -31,10 +34,12 @@ it('can create a post with photo upload', function () {
 });
 
 it('can create a post without photo', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    
     $response = $this->post('/posts', [
         'title' => 'Test Post without Photo',
         'slug' => 'test-post-without-photo',
-        'author' => 'Test Author',
         'lead' => 'This is a test lead',
         'content' => 'This is test content',
     ]);
@@ -49,6 +54,9 @@ it('can create a post without photo', function () {
 it('validates photo upload requirements', function ($fileType, $expectedError) {
     Storage::fake('public');
     
+    $user = User::factory()->create();
+    $this->actingAs($user);
+    
     $invalidPhoto = match ($fileType) {
         'large file' => UploadedFile::fake()->image('huge.jpg')->size(3000),
         'non-image file' => UploadedFile::fake()->create('document.pdf'),
@@ -58,7 +66,6 @@ it('validates photo upload requirements', function ($fileType, $expectedError) {
     $response = $this->post('/posts', [
         'title' => 'Test Post',
         'slug' => 'test-post',
-        'author' => 'Test Author',
         'content' => 'This is test content',
         'photo' => $invalidPhoto,
     ]);
