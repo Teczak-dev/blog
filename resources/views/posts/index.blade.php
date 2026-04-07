@@ -39,18 +39,159 @@
             </div>
         @endif
 
-        <!-- Filters/Search Bar -->
-        <div class="mb-6 flex flex-col sm:flex-row gap-4">
-            <div class="flex-1">
-                <input type="text" placeholder="Szukaj postów..."
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
-            </div>
-            <select class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                <option>Wszystkie kategorie</option>
-                <option>Laravel</option>
-                <option>React</option>
-                <option>AI & Copilot</option>
-            </select>
+        <!-- Search and Filters -->
+        <div class="mb-8">
+            <form method="GET" action="{{ route('posts.index') }}" class="space-y-4">
+                <!-- Search Bar -->
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="flex-1">
+                        <input type="text" 
+                               name="search" 
+                               value="{{ request('search') }}"
+                               placeholder="Szukaj postów po tytule, treści, kategorii, autorze, tagach..."
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 shadow-sm">
+                    </div>
+                    <button type="submit" 
+                            class="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200 shadow-lg hover:shadow-xl">
+                        🔍 Szukaj
+                    </button>
+                </div>
+                
+                <!-- Advanced Filters -->
+                <div class="bg-gray-50 rounded-lg p-6 space-y-4">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">🎯 Filtry zaawansowane</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- Category Filter -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategoria</label>
+                            <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">Wszystkie kategorie</option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>
+                                        {{ $category }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <!-- Author Filter -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Autor</label>
+                            <select name="author" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">Wszyscy autorzy</option>
+                                @foreach($authors as $author)
+                                    <option value="{{ $author }}" {{ request('author') === $author ? 'selected' : '' }}>
+                                        {{ $author }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <!-- Tag Filter -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tag</label>
+                            <select name="tag" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">Wszystkie tagi</option>
+                                @foreach($tags as $tag)
+                                    <option value="{{ $tag }}" {{ request('tag') === $tag ? 'selected' : '' }}>
+                                        #{{ $tag }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        
+                        <!-- Date Range -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Data od</label>
+                            <input type="date" name="date_from" value="{{ request('date_from') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Data do</label>
+                            <input type="date" name="date_to" value="{{ request('date_to') }}" 
+                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                        </div>
+                        
+                        <!-- Reading Time Range -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Czas czytania (min)</label>
+                            <div class="flex gap-2">
+                                <input type="number" name="read_time_min" value="{{ request('read_time_min') }}" 
+                                       placeholder="Od" min="1" max="60"
+                                       class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <input type="number" name="read_time_max" value="{{ request('read_time_max') }}" 
+                                       placeholder="Do" min="1" max="60"
+                                       class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4 pt-4 border-t border-gray-200">
+                        <button type="submit" 
+                                class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                            Zastosuj filtry
+                        </button>
+                        
+                        @if(request()->hasAny(['category', 'author', 'tag', 'date_from', 'date_to', 'read_time_min', 'read_time_max', 'search']))
+                            <a href="{{ route('posts.index') }}" 
+                               class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                                Wyczyść wszystkie
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                
+                @if(request('search'))
+                    <div class="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <div class="flex items-center gap-2">
+                            <span class="text-blue-800 font-medium">
+                                📝 Wyniki dla: "{{ request('search') }}"
+                            </span>
+                            <span class="text-blue-600">
+                                ({{ $posts->total() }} {{ $posts->total() == 1 ? 'post' : 'postów' }})
+                            </span>
+                        </div>
+                        <a href="{{ route('posts.index') }}" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            ✖️ Wyczyść
+                        </a>
+                    </div>
+                @endif
+                
+                @if(request()->hasAny(['category', 'author', 'tag', 'date_from', 'date_to', 'read_time_min', 'read_time_max']))
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="text-green-800 font-medium">🎯 Aktywne filtry:</span>
+                                <div class="flex flex-wrap gap-2">
+                                    @if(request('category'))
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">{{ request('category') }}</span>
+                                    @endif
+                                    @if(request('author'))
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">{{ request('author') }}</span>
+                                    @endif
+                                    @if(request('tag'))
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">#{{ request('tag') }}</span>
+                                    @endif
+                                    @if(request('date_from') || request('date_to'))
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                                            {{ request('date_from', '...') }} - {{ request('date_to', '...') }}
+                                        </span>
+                                    @endif
+                                    @if(request('read_time_min') || request('read_time_max'))
+                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                                            {{ request('read_time_min', '0') }}-{{ request('read_time_max', '∞') }} min
+                                        </span>
+                                    @endif
+                                </div>
+                                <span class="text-green-600">({{ $posts->total() }} {{ $posts->total() == 1 ? 'post' : 'postów' }})</span>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+            </form>
         </div>
 
         <!-- Posts Grid -->
@@ -146,195 +287,16 @@
             </div>
         @endif
 
-            {{-- <!-- Post Card 2 -->
-            <article
-                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <div class="h-48 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
-                    <span class="text-6xl">🤖</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-semibold rounded-full">
-                            AI & Copilot
-                        </span>
-                        <span class="text-gray-500 text-sm">8 min czytania</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                        <a href="post-detail.html">GitHub Copilot Agent Mode w praktyce</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                        Sprawdź, jak wykorzystać agenta AI do generowania całych komponentów aplikacji. Przykłady z
-                        życia wzięte!
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                AN
-                            </div>
-                            <span class="text-sm text-gray-700 font-medium">Anna Nowak</span>
-                        </div>
-                        <span class="text-sm text-gray-500">1 dzień temu</span>
-                    </div>
-                </div>
-            </article>
 
-            <!-- Post Card 3 -->
-            <article
-                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <div class="h-48 bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
-                    <span class="text-6xl">⚛️</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-3 py-1 bg-pink-100 text-pink-800 text-xs font-semibold rounded-full">
-                            React
-                        </span>
-                        <span class="text-gray-500 text-sm">12 min czytania</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                        <a href="post-detail.html">Inertia.js - most między Laravel a React</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                        Zbuduj SPA bez API! Poznaj Inertia.js i dowiedz się, dlaczego to game-changer w ekosystemie
-                        Laravel.
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                MZ
-                            </div>
-                            <span class="text-sm text-gray-700 font-medium">Michał Zając</span>
-                        </div>
-                        <span class="text-sm text-gray-500">3 dni temu</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Post Card 4 -->
-            <article
-                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <div class="h-48 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                    <span class="text-6xl">🎨</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
-                            Laravel
-                        </span>
-                        <span class="text-gray-500 text-sm">6 min czytania</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                        <a href="post-detail.html">Laravel Filament - admin panel w 15 minut</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                        RAD (Rapid Application Development) w praktyce. Stwórz profesjonalny panel administracyjny bez
-                        pisania CSS.
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                KP
-                            </div>
-                            <span class="text-sm text-gray-700 font-medium">Kasia Pawlak</span>
-                        </div>
-                        <span class="text-sm text-gray-500">5 dni temu</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Post Card 5 -->
-            <article
-                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <div class="h-48 bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
-                    <span class="text-6xl">🔒</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
-                            Security
-                        </span>
-                        <span class="text-gray-500 text-sm">10 min czytania</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                        <a href="post-detail.html">Bezpieczeństwo w Laravel - Top 10 zasad</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                        CSRF, XSS, SQL Injection? Dowiedz się, jak Laravel chroni Twoją aplikację i co musisz wiedzieć
-                        jako developer.
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                PK
-                            </div>
-                            <span class="text-sm text-gray-700 font-medium">Piotr Kowal</span>
-                        </div>
-                        <span class="text-sm text-gray-500">1 tydzień temu</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Post Card 6 -->
-            <article
-                class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                <div class="h-48 bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
-                    <span class="text-6xl">📊</span>
-                </div>
-                <div class="p-6">
-                    <div class="flex items-center gap-2 mb-3">
-                        <span class="px-3 py-1 bg-violet-100 text-violet-800 text-xs font-semibold rounded-full">
-                            Database
-                        </span>
-                        <span class="text-gray-500 text-sm">15 min czytania</span>
-                    </div>
-                    <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                        <a href="post-detail.html">Eloquent ORM - relacje w praktyce</a>
-                    </h3>
-                    <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                        hasMany, belongsTo, morphMany - przewodnik po relacjach w Eloquent. Od podstaw do zaawansowanych
-                        przypadków.
-                    </p>
-                    <div class="flex items-center justify-between pt-4 border-t border-gray-100">
-                        <div class="flex items-center gap-2">
-                            <div
-                                class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                EW
-                            </div>
-                            <span class="text-sm text-gray-700 font-medium">Ewa Wiśniewska</span>
-                        </div>
-                        <span class="text-sm text-gray-500">2 tygodnie temu</span>
-                    </div>
-                </div>
-            </article> --}}
 
         </div>
 
         <!-- Pagination -->
-        <div class="mt-8 flex justify-center">
-            <nav class="flex gap-2">
-                <button
-                    class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50"
-                    disabled>
-                    Poprzednia
-                </button>
-                <button class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-medium">
-                    1
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                    2
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                    3
-                </button>
-                <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50">
-                    Następna
-                </button>
-            </nav>
-        </div>
+        @if($posts->hasPages())
+            <div class="mt-12">
+                {{ $posts->links('vendor.pagination.custom') }}
+            </div>
+        @endif
     </main>
 
 

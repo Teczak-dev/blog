@@ -7,11 +7,73 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::orderBy('created_at', 'desc')->get();
+        $query = Post::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        
+        // Global search
+        if ($search = $request->get('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('author', 'like', "%{$search}%")
+                  ->orWhere('lead', 'like', "%{$search}%")
+                  ->orWhere('tags', 'like', "%{$search}%");
+            });
+        }
+        
+        // Category filter
+        if ($category = $request->get('category')) {
+            $query->where('category', $category);
+        }
+        
+        // Author filter
+        if ($author = $request->get('author')) {
+            $query->where('author', $author);
+        }
+        
+        // Date range filter
+        if ($dateFrom = $request->get('date_from')) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        
+        if ($dateTo = $request->get('date_to')) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+        
+        // Reading time filter
+        if ($readTimeMin = $request->get('read_time_min')) {
+            $query->where('read_time_minutes', '>=', $readTimeMin);
+        }
+        
+        if ($readTimeMax = $request->get('read_time_max')) {
+            $query->where('read_time_minutes', '<=', $readTimeMax);
+        }
+        
+        // Tag filter
+        if ($tag = $request->get('tag')) {
+            $query->where('tags', 'like', "%{$tag}%");
+        }
+        
+        $posts = $query->paginate(12)->withQueryString();
+        
+        // Get unique values for filter dropdowns
+        $categories = Post::whereNotNull('category')->distinct()->pluck('category')->sort();
+        $authors = Post::whereNotNull('author')->distinct()->pluck('author')->sort();
+        $allTags = Post::whereNotNull('tags')
+            ->get()
+            ->pluck('tags')
+            ->filter()
+            ->flatten()
+            ->unique()
+            ->sort();
+        
         return view('posts.index', [
-            'posts' => $posts
+            'posts' => $posts,
+            'categories' => $categories,
+            'authors' => $authors,
+            'tags' => $allTags
         ]);
     }
 
