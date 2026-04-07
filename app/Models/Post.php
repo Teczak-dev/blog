@@ -103,4 +103,67 @@ class Post extends Model
             'gray' => 'Szary',
         ];
     }
+
+    // Get related posts based on category, tags and author
+    public function getRelatedPosts($limit = 3)
+    {
+        $relatedPosts = collect();
+        
+        // Priority 1: Same category (excluding current post)
+        $sameCategoryPosts = static::where('category', $this->category)
+            ->where('id', '!=', $this->id)
+            ->where('is_published', true)
+            ->latest()
+            ->take($limit)
+            ->get();
+            
+        $relatedPosts = $relatedPosts->merge($sameCategoryPosts);
+        
+        // Priority 2: Similar tags (if we have tags and need more posts)
+        if ($relatedPosts->count() < $limit && $this->tags) {
+            $thisTags = $this->tags;
+            $tagsPosts = static::where('id', '!=', $this->id)
+                ->where('is_published', true)
+                ->whereNotIn('id', $relatedPosts->pluck('id'))
+                ->get()
+                ->filter(function($post) use ($thisTags) {
+                    if (!$post->tags) return false;
+                    
+                    // Check if any tags overlap
+                    $intersection = array_intersect($thisTags, $post->tags);
+                    return count($intersection) > 0;
+                })
+                ->sortByDesc('created_at')
+                ->take($limit - $relatedPosts->count());
+                
+            $relatedPosts = $relatedPosts->merge($tagsPosts);
+        }
+        
+        // Priority 3: Same author (if need more posts)
+        if ($relatedPosts->count() < $limit) {
+            $authorPosts = static::where('author', $this->author)
+                ->where('id', '!=', $this->id)
+                ->where('is_published', true)
+                ->whereNotIn('id', $relatedPosts->pluck('id'))
+                ->latest()
+                ->take($limit - $relatedPosts->count())
+                ->get();
+                
+            $relatedPosts = $relatedPosts->merge($authorPosts);
+        }
+        
+        // Priority 4: Latest posts (if still need more)
+        if ($relatedPosts->count() < $limit) {
+            $latestPosts = static::where('id', '!=', $this->id)
+                ->where('is_published', true)
+                ->whereNotIn('id', $relatedPosts->pluck('id'))
+                ->latest()
+                ->take($limit - $relatedPosts->count())
+                ->get();
+                
+            $relatedPosts = $relatedPosts->merge($latestPosts);
+        }
+        
+        return $relatedPosts->take($limit);
+    }
 }

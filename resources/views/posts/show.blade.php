@@ -288,63 +288,68 @@
 
 
         <!-- Related Posts -->
+        @if($relatedPosts->count() > 0)
         <section class="mt-12">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">Powiązane artykuły</h2>
-            <div class="grid gap-6 md:grid-cols-3">
-
-                <!-- Related Post 1 -->
-                <a href="#" class="group">
-                    <article
-                        class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                        <div
-                            class="h-32 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
-                            <span class="text-5xl">🚀</span>
-                        </div>
+            <div class="grid gap-6 md:grid-cols-{{ $relatedPosts->count() <= 3 ? $relatedPosts->count() : '3' }}">
+                @foreach($relatedPosts as $relatedPost)
+                <a href="{{ route('posts.show', $relatedPost->id) }}" class="group">
+                    <article class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                        @if($relatedPost->photo)
+                            <div class="h-32 bg-cover bg-center" style="background-image: url('{{ asset('storage/' . $relatedPost->photo) }}');">
+                                <div class="h-full bg-black bg-opacity-20"></div>
+                            </div>
+                        @else
+                            @php
+                                $gradients = [
+                                    'Laravel' => 'bg-gradient-to-br from-red-500 to-orange-600',
+                                    'PHP' => 'bg-gradient-to-br from-purple-500 to-indigo-600',
+                                    'React' => 'bg-gradient-to-br from-blue-500 to-cyan-600',
+                                    'Vue.js' => 'bg-gradient-to-br from-green-500 to-teal-600',
+                                    'JavaScript' => 'bg-gradient-to-br from-yellow-500 to-orange-600',
+                                    'Docker' => 'bg-gradient-to-br from-blue-500 to-indigo-600',
+                                    'AI' => 'bg-gradient-to-br from-purple-500 to-pink-600',
+                                    'Tutorial' => 'bg-gradient-to-br from-gray-500 to-blue-600',
+                                    'default' => 'bg-gradient-to-br from-blue-500 to-indigo-600'
+                                ];
+                                
+                                $icons = [
+                                    'Laravel' => '🔥',
+                                    'PHP' => '🐘', 
+                                    'React' => '⚛️',
+                                    'Vue.js' => '💚',
+                                    'JavaScript' => '⚡',
+                                    'Docker' => '🐋',
+                                    'AI' => '🤖',
+                                    'Tutorial' => '📚',
+                                    'default' => '📄'
+                                ];
+                                
+                                $gradient = $gradients[$relatedPost->category] ?? $gradients['default'];
+                                $icon = $icons[$relatedPost->category] ?? $icons['default'];
+                            @endphp
+                            <div class="h-32 {{ $gradient }} flex items-center justify-center">
+                                <span class="text-5xl">{{ $icon }}</span>
+                            </div>
+                        @endif
+                        
                         <div class="p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span class="inline-block px-2 py-1 text-xs rounded-full {{ $relatedPost->getCategoryColorClasses() }}">
+                                    {{ $relatedPost->category }}
+                                </span>
+                            </div>
                             <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
-                                Docker dla początkujących - pełny przewodnik
+                                {{ $relatedPost->title }}
                             </h3>
-                            <p class="text-sm text-gray-500">8 min czytania</p>
+                            <p class="text-sm text-gray-500">{{ $relatedPost->read_time_minutes }} min czytania</p>
                         </div>
                     </article>
                 </a>
-
-                <!-- Related Post 2 -->
-                <a href="#" class="group">
-                    <article
-                        class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                        <div
-                            class="h-32 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                            <span class="text-5xl">⚡</span>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
-                                Laravel Breeze - autentykacja w 5 minut
-                            </h3>
-                            <p class="text-sm text-gray-500">12 min czytania</p>
-                        </div>
-                    </article>
-                </a>
-
-                <!-- Related Post 3 -->
-                <a href="#" class="group">
-                    <article
-                        class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                        <div
-                            class="h-32 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                            <span class="text-5xl">🎨</span>
-                        </div>
-                        <div class="p-4">
-                            <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
-                                Laravel Filament - admin panel w 15 minut
-                            </h3>
-                            <p class="text-sm text-gray-500">6 min czytania</p>
-                        </div>
-                    </article>
-                </a>
-
+                @endforeach
             </div>
         </section>
+        @endif
 
     </main>
 

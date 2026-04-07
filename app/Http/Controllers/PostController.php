@@ -80,9 +80,11 @@ class PostController extends Controller
     public function show(string $id)
     {
         $post = Post::with('comments')->findOrFail($id);
+        $relatedPosts = $post->getRelatedPosts();
 
         return view('posts.show', [
             'post' => $post,
+            'relatedPosts' => $relatedPosts,
         ]);
     }
 
