@@ -6,9 +6,12 @@
         <article class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
             <!-- Featured Image -->
             <div class="h-96 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                {{-- <span class="text-9xl">{{ $post->photo }}</span> --}}
-                <img src="{{ Storage::url($post->photo) }}" alt="{{ $post->title }}" class="object-cover h-full w-full">
-                
+                @if ($post->photo)
+                    <img src="{{ asset('storage/' . $post->photo) }}" alt="{{ $post->title }}" 
+                         class="w-full h-full object-cover">
+                @else
+                    <span class="text-9xl">📝</span>
+                @endif
             </div>
 
             <!-- Post Content -->
@@ -44,14 +47,18 @@
                     {{ $post->title }}
                 </h1>
 
-                <!-- Lead -->
-                <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-                    {{ Str::limit($post->content, 200) }}
-                </p>
+                @if ($post->lead)
+                    <!-- Lead -->
+                    <div class="text-xl text-gray-600 mb-8 leading-relaxed">
+                        {!! $post->lead !!}
+                    </div>
+                @endif
 
                 <!-- Content -->
                 <div class="prose prose-lg max-w-none">
-                    {{ $post->content }}
+                    <div class="text-gray-700 mb-4 leading-relaxed whitespace-pre-line">
+                        {!! $post->content !!}
+                    </div>
                 </div>
 
                 <!-- Tags -->
@@ -99,32 +106,47 @@
         <!-- Comments Section -->
         <section class="bg-white rounded-lg shadow-md p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">
-                Komentarze (3)
+                Komentarze ({{ $post->comments->count() }})
             </h2>
+
+            @if(session('success'))
+                <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <!-- Comment Form -->
             <div class="mb-8 pb-8 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Dodaj komentarz</h3>
-                <form class="space-y-4">
+                <form method="POST" action="{{ route('comments.store', $post->slug) }}" class="space-y-4">
+                    @csrf
                     <!-- Name -->
                     <div>
-                        <label for="author" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="author_name" class="block text-sm font-medium text-gray-700 mb-2">
                             Twoje imię *
                         </label>
-                        <input type="text" id="author" name="author" required
+                        <input type="text" id="author_name" name="author_name" required
+                            value="{{ old('author_name') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             placeholder="Jan Kowalski">
+                        @error('author_name')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="author_email" class="block text-sm font-medium text-gray-700 mb-2">
                             Email *
                         </label>
-                        <input type="email" id="email" name="email" required
+                        <input type="email" id="author_email" name="author_email" required
+                            value="{{ old('author_email') }}"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                             placeholder="jan@example.com">
                         <p class="mt-1 text-sm text-gray-500">Email nie będzie publikowany</p>
+                        @error('author_email')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Comment Content -->
@@ -134,7 +156,10 @@
                         </label>
                         <textarea id="content" name="content" required rows="5"
                             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-                            placeholder="Podziel się swoimi przemyśleniami..."></textarea>
+                            placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
+                        @error('content')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Submit Button -->
@@ -150,155 +175,31 @@
 
             <!-- Comments List -->
             <div class="space-y-6">
-
-                <!-- Comment 1 -->
-                <div class="flex gap-4">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                            AN
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-semibold text-gray-900">Anna Nowak</h4>
-                                <span class="text-sm text-gray-500">2 godziny temu</span>
-                            </div>
-                            <p class="text-gray-700 leading-relaxed">
-                                Świetny artykuł! Właśnie zaczynałam przygodę z Laravel i ten tutorial bardzo mi pomógł.
-                                Sail to genialne rozwiązanie - wszystko działa od razu bez konfiguracji 🚀
-                            </p>
-                            <div class="mt-3 flex items-center gap-4">
-                                <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                    Odpowiedz
-                                </button>
-                                <button class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                    </svg>
-                                    <span>12</span>
-                                </button>
+                @forelse($post->comments->sortByDesc('created_at') as $comment)
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0">
+                            <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                                {{ strtoupper(substr($comment->author_name, 0, 2)) }}
                             </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Comment 2 -->
-                <div class="flex gap-4">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center text-white font-semibold">
-                            MK
-                        </div>
-                    </div>
-                    <div class="flex-1">
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-semibold text-gray-900">Marek Kowalczyk</h4>
-                                <span class="text-sm text-gray-500">5 godzin temu</span>
-                            </div>
-                            <p class="text-gray-700 leading-relaxed">
-                                Czy Laravel 11 ma jakieś breaking changes w porównaniu do wersji 10? Planujemy migrację
-                                projektu i zastanawiam się, ile pracy nas czeka.
-                            </p>
-                            <div class="mt-3 flex items-center gap-4">
-                                <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                    Odpowiedz
-                                </button>
-                                <button class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                    </svg>
-                                    <span>5</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Nested Reply -->
-                        <div class="ml-8 mt-4 flex gap-4">
-                            <div class="flex-shrink-0">
-                                <div
-                                    class="w-10 h-10 bg-gradient-to-br from-indigo-400 to-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                                    JK
+                        <div class="flex-1">
+                            <div class="bg-gray-50 rounded-lg p-4">
+                                <div class="flex items-center justify-between mb-2">
+                                    <h4 class="font-semibold text-gray-900">{{ $comment->author_name }}</h4>
+                                    <span class="text-sm text-gray-500">{{ $comment->created_at->diffForHumans() }}</span>
                                 </div>
-                            </div>
-                            <div class="flex-1">
-                                <div class="bg-indigo-50 rounded-lg p-4 border border-indigo-100">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <div class="flex items-center gap-2">
-                                            <h4 class="font-semibold text-gray-900">Jan Kowalski</h4>
-                                            <span
-                                                class="px-2 py-0.5 bg-indigo-600 text-white text-xs rounded-full">Autor</span>
-                                        </div>
-                                        <span class="text-sm text-gray-500">3 godziny temu</span>
-                                    </div>
-                                    <p class="text-gray-700 leading-relaxed">
-                                        @Marek - Breaking changes są minimalne! Głównie dotyczą struktury katalogów i
-                                        konfiguracji. Polecam sprawdzić oficjalny upgrade guide na laravel.com
-                                    </p>
-                                    <div class="mt-3 flex items-center gap-4">
-                                        <button
-                                            class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor"
-                                                viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                            </svg>
-                                            <span>8</span>
-                                        </button>
-                                    </div>
-                                </div>
+                                <div class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $comment->content }}</div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Comment 3 -->
-                <div class="flex gap-4">
-                    <div class="flex-shrink-0">
-                        <div
-                            class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
-                            KW
-                        </div>
+                @empty
+                    <div class="text-center py-8 text-gray-500">
+                        <p>Brak komentarzy. Bądź pierwszy który skomentuje ten post!</p>
                     </div>
-                    <div class="flex-1">
-                        <div class="bg-gray-50 rounded-lg p-4">
-                            <div class="flex items-center justify-between mb-2">
-                                <h4 class="font-semibold text-gray-900">Kasia Wiśniewska</h4>
-                                <span class="text-sm text-gray-500">1 dzień temu</span>
-                            </div>
-                            <p class="text-gray-700 leading-relaxed">
-                                Czy ktoś używał Sail w produkcji? Czy to tylko narzędzie developerskie, czy można na nim
-                                oprzeć deployment?
-                            </p>
-                            <div class="mt-3 flex items-center gap-4">
-                                <button class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">
-                                    Odpowiedz
-                                </button>
-                                <button class="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                                    </svg>
-                                    <span>3</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Load More Comments -->
-            <div class="mt-8 text-center">
-                <button class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">
-                    Załaduj więcej komentarzy
-                </button>
+                @endforelse
             </div>
         </section>
+
 
         <!-- Related Posts -->
         <section class="mt-12">
@@ -311,11 +212,11 @@
                         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                         <div
                             class="h-32 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
-                            <span class="text-5xl">🤖</span>
+                            <span class="text-5xl">🚀</span>
                         </div>
                         <div class="p-4">
                             <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
-                                GitHub Copilot Agent Mode w praktyce
+                                Docker dla początkujących - pełny przewodnik
                             </h3>
                             <p class="text-sm text-gray-500">8 min czytania</p>
                         </div>
@@ -326,12 +227,13 @@
                 <a href="#" class="group">
                     <article
                         class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
-                        <div class="h-32 bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center">
-                            <span class="text-5xl">⚛️</span>
+                        <div
+                            class="h-32 bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                            <span class="text-5xl">⚡</span>
                         </div>
                         <div class="p-4">
                             <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
-                                Inertia.js - most między Laravel a React
+                                Laravel Breeze - autentykacja w 5 minut
                             </h3>
                             <p class="text-sm text-gray-500">12 min czytania</p>
                         </div>

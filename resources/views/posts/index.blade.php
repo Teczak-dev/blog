@@ -31,7 +31,12 @@
                 <article
                     class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                     <div class="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                        <img src="{{ Storage::url($item->photo) }}" alt="{{ $item->title }}" class="object-cover h-full w-full">
+                        @if ($item->photo)
+                            <img src="{{ asset('storage/' . $item->photo) }}" alt="{{ $item->title }}" 
+                                 class="w-full h-full object-cover">
+                        @else
+                            <span class="text-6xl">📝</span>
+                        @endif
                     </div>
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-3">
@@ -43,9 +48,9 @@
                         <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
                             <a href="{{ route('posts.show', $item->slug) }}">{{ $item->title }}</a>
                         </h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-3">
-                            {{ Str::limit($item->content, 200) }}
-                        </p>
+                        <div class="text-gray-600 text-sm mb-4 line-clamp-3">
+                            {!! $item->lead ?? Str::limit(strip_tags($item->content), 150) !!}
+                        </div>
                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-2">
                                 <div

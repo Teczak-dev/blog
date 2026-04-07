@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
 
-            $table->string('title')->require();
-            $table->string('slug')->require()->unique();
+            $table->string('title');
+            $table->string('slug')->unique();
+            $table->text('lead')->nullable();
             $table->text('content');
-            $table->string('author')->require();
+            $table->string('author');
             $table->boolean('is_published')->default(false);
             
             $table->timestamps();

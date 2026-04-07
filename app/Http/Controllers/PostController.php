@@ -17,9 +17,10 @@ class PostController extends Controller
 
     public function show(string $slug)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post = Post::where('slug', $slug)->with('comments')->firstOrFail();
+
         return view('posts.show', [
-            'post' => $post
+            'post' => $post,
         ]);
     }
 
@@ -32,7 +33,7 @@ class PostController extends Controller
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
-        return view('posts.update', [
+        return view('posts.edit', [
             'post' => $post
         ]);
     }
@@ -43,15 +44,22 @@ class PostController extends Controller
 
         $parameters = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'slug' => ['required', 'string', 'max:255'],
-            'photo' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'unique:posts,slug,' . $post->id],
+            'lead' => ['nullable', 'string'],
             'author' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string']
+            'content' => ['required', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
+
+        // Handle photo upload
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('posts', 'public');
+            $post->photo = $photoPath;
+        }
 
         $post->title = $parameters['title'];
         $post->slug = $parameters['slug'];
-        $post->photo = $parameters['photo'];
+        $post->lead = $parameters['lead'] ?? null;
         $post->author = $parameters['author'];
         $post->content = $parameters['content'];
 
@@ -65,20 +73,26 @@ class PostController extends Controller
         $parameters = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'slug' => ['required', 'string', 'max:255', 'unique:posts,slug'],
-            'photo' => ['required', 'string', 'max:255'],
+            'lead' => ['nullable', 'string'],
             'author' => ['required', 'string', 'max:255'],
-            'content' =>['required', 'string']
+            'content' => ['required', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ]);
 
-        $post = new Post();
+        // Handle photo upload
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('posts', 'public');
+        }
+
+        $post = new Post;
 
         $post->title = $parameters['title'];
-        $post->slug = $parameters['slug'];  
-        $post->photo = $parameters['photo'];
+        $post->slug = $parameters['slug'];
+        $post->lead = $parameters['lead'] ?? null;
         $post->author = $parameters['author'];
         $post->content = $parameters['content'];
-
-        // Post::create($parameters); // mass assignment
+        $post->photo = $photoPath;
 
         $post->save();
 
