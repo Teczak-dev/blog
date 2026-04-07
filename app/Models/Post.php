@@ -75,15 +75,35 @@ class Post extends Model
     // Get CSS classes for category color
     public function getCategoryColorClasses()
     {
+        // Using inline styles for guaranteed color display
         $colorMap = [
-            'blue' => 'bg-blue-100 text-blue-800',
-            'green' => 'bg-green-100 text-green-800',
-            'purple' => 'bg-purple-100 text-purple-800',
-            'red' => 'bg-red-100 text-red-800',
-            'yellow' => 'bg-yellow-100 text-yellow-800',
-            'indigo' => 'bg-indigo-100 text-indigo-800',
-            'pink' => 'bg-pink-100 text-pink-800',
-            'gray' => 'bg-gray-100 text-gray-800',
+            'blue' => 'bg-blue-600 text-white',           
+            'green' => 'bg-green-600 text-white',         
+            'purple' => 'bg-purple-600 text-white',       
+            'red' => 'bg-red-600 text-white',             
+            'yellow' => 'bg-yellow-500 text-black',       // yellow with black text
+            'orange' => 'bg-orange-600 text-white',       
+            'indigo' => 'bg-indigo-600 text-white',       
+            'pink' => 'bg-pink-600 text-white',           
+            'gray' => 'bg-gray-600 text-white',           
+        ];
+
+        return $colorMap[$this->category_color ?? 'blue'] ?? $colorMap['blue'];
+    }
+    
+    // Get inline styles for category color (fallback method)
+    public function getCategoryInlineStyles()
+    {
+        $colorMap = [
+            'blue' => 'background-color: #2563eb; color: white;',           
+            'green' => 'background-color: #16a34a; color: white;',         
+            'purple' => 'background-color: #9333ea; color: white;',       
+            'red' => 'background-color: #dc2626; color: white;',             
+            'yellow' => 'background-color: #eab308; color: black;',       
+            'orange' => 'background-color: #ea580c; color: white;',       
+            'indigo' => 'background-color: #4f46e5; color: white;',       
+            'pink' => 'background-color: #db2777; color: white;',           
+            'gray' => 'background-color: #4b5563; color: white;',           
         ];
 
         return $colorMap[$this->category_color ?? 'blue'] ?? $colorMap['blue'];
@@ -98,6 +118,7 @@ class Post extends Model
             'purple' => 'Fioletowy',
             'red' => 'Czerwony',
             'yellow' => 'Żółty',
+            'orange' => 'Pomarańczowy',
             'indigo' => 'Indygo',
             'pink' => 'Różowy',
             'gray' => 'Szary',

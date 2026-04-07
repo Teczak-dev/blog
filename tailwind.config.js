@@ -10,6 +10,19 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    safelist: [
+        // Category color classes with !important modifiers to force application
+        '!bg-blue-500', '!text-white',
+        '!bg-green-500', '!text-white', 
+        '!bg-purple-500', '!text-white',
+        '!bg-red-500', '!text-white',
+        '!bg-amber-500', '!text-white',
+        '!bg-orange-500', '!text-white',
+        '!bg-indigo-500', '!text-white',
+        '!bg-pink-500', '!text-white',
+        '!bg-gray-500', '!text-white',
+    ],
+
     theme: {
         extend: {
             fontFamily: {

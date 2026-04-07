@@ -72,7 +72,8 @@
                     <div class="ml-auto flex flex-wrap gap-2">
                         <!-- Category -->
                         @if($post->category)
-                            <span class="px-4 py-2 {{ $post->getCategoryColorClasses() }} text-sm font-semibold rounded-full">
+                            <span class="px-4 py-2 text-sm font-semibold rounded-full" 
+                                  style="{{ $post->getCategoryInlineStyles() }}">
                                 {{ $post->category }}
                             </span>
                         @endif
@@ -306,7 +307,8 @@
                         
                         <div class="p-4">
                             <div class="flex items-center gap-2 mb-2">
-                                <span class="inline-block px-2 py-1 text-xs rounded-full {{ $relatedPost->getCategoryColorClasses() }}">
+                                <span class="inline-block px-2 py-1 text-xs rounded-full" 
+                                      style="{{ $relatedPost->getCategoryInlineStyles() }}">
                                     {{ $relatedPost->category }}
                                 </span>
                             </div>

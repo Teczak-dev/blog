@@ -213,7 +213,8 @@
                         <div class="flex items-center gap-2 mb-3">
                             <!-- Category -->
                             @if($item->category)
-                                <span class="px-4 py-1 {{ $item->getCategoryColorClasses() }} text-xs font-semibold rounded-full">
+                                <span class="px-4 py-1 text-xs font-semibold rounded-full" 
+                                      style="{{ $item->getCategoryInlineStyles() }}">
                                     {{ $item->category }}
                                 </span>
                             @endif

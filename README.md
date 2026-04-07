@@ -14,8 +14,8 @@ A blog application built with Laravel 12, Filament v5, and Tailwind CSS v4. Feat
 ## Installation
 
 ```bash
-git clone https://github.com/Teczak-dev/blog-2-school.git
-cd blog-2-school
+git clone https://github.com/Teczak-dev/blog.git
+cd blog
 composer install
 npm install
 cp .env.example .env

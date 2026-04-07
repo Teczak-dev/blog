@@ -112,7 +112,7 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|min:5|max:255',
             'category' => 'nullable|min:2|max:255',
-            'category_color' => 'nullable|string|in:blue,green,purple,red,yellow,indigo,pink,gray',
+            'category_color' => 'nullable|string|in:blue,green,purple,red,yellow,orange,indigo,pink,gray',
             'lead' => 'nullable|max:500',
             'content' => 'required|min:10',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -167,7 +167,7 @@ class PostController extends Controller
         $request->validate([
             'title' => 'required|min:5|max:255',
             'category' => 'nullable|min:2|max:255',
-            'category_color' => 'nullable|string|in:blue,green,purple,red,yellow,indigo,pink,gray',
+            'category_color' => 'nullable|string|in:blue,green,purple,red,yellow,orange,indigo,pink,gray',
             'lead' => 'nullable|max:500',
             'content' => 'required|min:10',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
