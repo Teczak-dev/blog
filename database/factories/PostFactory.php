@@ -19,16 +19,21 @@ class PostFactory extends Factory
     public function definition(): array
     {
         $title = $this->faker->sentence(4);
+        $categories = ['Laravel', 'Vue', 'React', 'PHP', 'JavaScript', 'CSS', 'DevOps', 'Tutorial'];
+        $colors = array_keys(\App\Models\Post::getCategoryColors());
         
         return [
             'title' => $title,
-            'slug' => Str::slug($title),
+            'category' => $this->faker->randomElement($categories),
+            'category_color' => $this->faker->randomElement($colors),
             'lead' => $this->faker->paragraph(2),
             'content' => $this->faker->paragraphs(3, true),
             'author' => $this->faker->name(),
             'photo' => null,
             'user_id' => User::factory(),
             'is_published' => $this->faker->boolean(80),
+            'tags' => $this->faker->randomElements(['PHP', 'Laravel', 'Vue', 'React', 'CSS', 'JS'], rand(1, 3)),
+            'read_time_minutes' => $this->faker->numberBetween(1, 15),
         ];
     }
 

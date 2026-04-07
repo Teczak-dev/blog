@@ -1,9 +1,20 @@
 <x-layout>
-    <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Main Content with modern background -->
+    <main class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Back navigation -->
+            <div class="mb-6">
+                <a href="{{ route('posts.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Powrót do postów
+                </a>
+            </div>
 
-        <!-- Post Header -->
-        <article class="bg-white rounded-lg shadow-md overflow-hidden mb-8">
+            <!-- Post Header -->
+            <article class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden mb-8">
             <!-- Featured Image -->
             <div class="h-96 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                 @if ($post->photo)
@@ -16,16 +27,11 @@
 
             <!-- Post Content -->
             <div class="p-8">
-                <div class="flex items-center justify-between mb-4">
-                    <a href="{{ route('posts.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                        </svg>
-                        Powrót do postów
-                    </a>
+                <div class="flex items-center justify-between mb-6">
+                    <div></div> <!-- Spacer -->
                     
                     @if (auth()->check() && auth()->id() === $post->user_id)
-                        <a href="{{ route('posts.edit', $post->slug) }}" 
+                        <a href="{{ route('posts.edit', $post->id) }}" 
                            class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -55,19 +61,21 @@
                 <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center text-lg font-semibold">
+                            class="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-lg font-semibold text-white">
                             {{ $post->author[0] }}
                         </div>
                         <div>
                             <p class="font-semibold text-gray-900">{{ $post->author }}</p>
-                            <p class="text-sm text-gray-500">Opublikowano: {{ $post->created_at->format('d.m.Y') }}</p>
+                            <p class="text-sm text-gray-500">{{ $post->created_at->format('d.m.Y') }} • {{ $post->read_time_minutes ?? 5 }} min czytania</p>
                         </div>
                     </div>
-                    <div class="ml-auto flex gap-2">
-                        <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full">
-                            {{ $post->slug }}
-                        </span>
-                        <span class="text-gray-500 text-sm">5 min czytania</span>
+                    <div class="ml-auto flex flex-wrap gap-2">
+                        <!-- Category -->
+                        @if($post->category)
+                            <span class="px-4 py-2 {{ $post->getCategoryColorClasses() }} text-sm font-semibold rounded-full">
+                                {{ $post->category }}
+                            </span>
+                        @endif
                     </div>
                 </div>
 
@@ -90,28 +98,20 @@
                     </div>
                 </div>
 
-                <!-- Tags -->
-                <div class="mt-8 pt-6 border-t border-gray-200">
-                    <p class="text-sm text-gray-600 mb-3">Tagi:</p>
-                    <div class="flex flex-wrap gap-2">
-                        <span
-                            class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 cursor-pointer">
-                            #laravel
-                        </span>
-                        <span
-                            class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 cursor-pointer">
-                            #php
-                        </span>
-                        <span
-                            class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 cursor-pointer">
-                            #docker
-                        </span>
-                        <span
-                            class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full hover:bg-gray-200 cursor-pointer">
-                            #tutorial
-                        </span>
+                <!-- Hashtags -->
+                @if($post->tags && count($post->tags) > 0)
+                    <div class="mt-8 mb-6 pt-6 border-t border-gray-200">
+                        <div class="flex flex-wrap gap-3">
+                            @foreach($post->tags as $tag)
+                                <span class="text-indigo-600 hover:text-indigo-800 cursor-pointer font-medium transition-colors duration-200">
+                                    #{{ strtolower(str_replace(' ', '', $tag)) }}
+                                </span>
+                            @endforeach
+                        </div>
                     </div>
-                </div>
+                @endif
+
+
 
                 <!-- Social Share -->
                 <div class="mt-6 flex items-center gap-4">
@@ -133,7 +133,7 @@
         </article>
 
         <!-- Comments Section -->
-        <section class="bg-white rounded-lg shadow-md p-8">
+        <section class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
             <h2 class="text-2xl font-bold text-gray-900 mb-6">
                 Komentarze ({{ $post->comments->count() }})
             </h2>
@@ -147,7 +147,7 @@
             <!-- Comment Form -->
             <div class="mb-8 pb-8 border-b border-gray-200">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Dodaj komentarz</h3>
-                <form method="POST" action="{{ route('comments.store', $post->slug) }}" class="space-y-4">
+                <form method="POST" action="{{ route('comments.store', $post->id) }}" class="space-y-4">
                     @csrf
                     <!-- Name -->
                     <div>

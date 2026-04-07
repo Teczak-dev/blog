@@ -13,7 +13,7 @@ it('can display comments on post page', function () {
         'content' => 'Test comment content'
     ]);
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
     $response->assertSee('Jan Kowalski');
@@ -24,13 +24,13 @@ it('can display comments on post page', function () {
 it('can add a comment to a post', function () {
     $post = Post::factory()->create();
 
-    $response = $this->post("/posts/{$post->slug}/comments", [
+    $response = $this->post("/posts/{$post->id}/comments", [
         'author_name' => 'Anna Nowak',
         'author_email' => 'anna@example.com',
         'content' => 'This is a great post!',
     ]);
 
-    $response->assertRedirect("/posts/{$post->slug}");
+    $response->assertRedirect("/posts/{$post->id}");
     $response->assertSessionHas('success');
 
     expect(Comment::count())->toBe(1);
@@ -53,7 +53,7 @@ it('validates comment form data', function ($field, $value, $expectedError) {
 
     $invalidData = array_merge($validData, [$field => $value]);
 
-    $response = $this->post("/posts/{$post->slug}/comments", $invalidData);
+    $response = $this->post("/posts/{$post->id}/comments", $invalidData);
 
     $response->assertSessionHasErrors($field);
 })->with([
@@ -68,7 +68,7 @@ it('validates comment form data', function ($field, $value, $expectedError) {
 it('displays empty state when no comments', function () {
     $post = Post::factory()->create();
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
     $response->assertSee('Komentarze (0)');
@@ -88,7 +88,7 @@ it('sorts comments by creation date descending', function () {
         'created_at' => now()->subHours(1)
     ]);
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $responseContent = $response->getContent();
     $firstPos = strpos($responseContent, 'Second Commenter');
@@ -100,7 +100,7 @@ it('sorts comments by creation date descending', function () {
 it('preserves form data when validation fails', function () {
     $post = Post::factory()->create();
 
-    $response = $this->post("/posts/{$post->slug}/comments", [
+    $response = $this->post("/posts/{$post->id}/comments", [
         'author_name' => 'Valid Name',
         'author_email' => 'invalid-email',
         'content' => 'Valid content',

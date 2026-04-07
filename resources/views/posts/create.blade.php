@@ -41,41 +41,107 @@
                                    name="title" 
                                    id="title"
                                    value="{{ old('title') }}" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('title') border-red-500 @enderror"
-                                   placeholder="Wprowadź tytuł postu..."
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('title') border-red-500 @enderror"
                                    required>
                             @error('title')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Slug -->
-                        <div>
-                            <label for="slug" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Przyjazny adres URL <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" 
-                                   name="slug" 
-                                   id="slug"
-                                   value="{{ old('slug') }}" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('slug') border-red-500 @enderror"
-                                   placeholder="np. moj-pierwszy-post"
-                                   required>
-                            @error('slug')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <!-- Category Settings Section -->
+                        <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border border-green-100">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                🏷️ Kategoryzacja i oznaczenia
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Category -->
+                                <div>
+                                    <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        📁 Kategoria (opcjonalna)
+                                    </label>
+                                    <input type="text" 
+                                           name="category" 
+                                           id="category"
+                                           value="{{ old('category') }}" 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category') border-red-500 @enderror"
+                                           placeholder="np. Laravel, React, Tutorial">
+                                    @error('category')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Auto-generowane z tytułu jeśli puste</p>
+                                </div>
+
+                                <!-- Category Color -->
+                                <div>
+                                    <label for="category_color" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        🎨 Kolor kategorii
+                                    </label>
+                                    <select name="category_color" 
+                                            id="category_color"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category_color') border-red-500 @enderror">
+                                        @foreach(\App\Models\Post::getCategoryColors() as $value => $label)
+                                            <option value="{{ $value }}" 
+                                                    {{ old('category_color', 'blue') === $value ? 'selected' : '' }}>
+                                                {{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_color')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Kolor tła dla kategorii</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <!-- Tags -->
+                                <div>
+                                    <label for="tags" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        #️⃣ Hashtagi (opcjonalne)
+                                    </label>
+                                    <input type="text" 
+                                           name="tags" 
+                                           id="tags"
+                                           value="{{ old('tags') }}"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('tags') border-red-500 @enderror"
+                                           placeholder="React, Laravel, JavaScript">
+                                    @error('tags')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Oddziel przecinkami (np: React, Laravel)</p>
+                                </div>
+
+                                <!-- Read Time -->
+                                <div>
+                                    <label for="read_time_minutes" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        ⏱️ Czas czytania (minuty)
+                                    </label>
+                                    <input type="number" 
+                                           name="read_time_minutes" 
+                                           id="read_time_minutes"
+                                           min="1" 
+                                           max="60"
+                                           value="{{ old('read_time_minutes') }}"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
+                                           placeholder="5">
+                                    @error('read_time_minutes')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Auto-wyliczony z treści jeśli puste</p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Lead -->
                         <div>
                             <label for="lead" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Krótki opis (opcjonalny)
+                                📝 Krótki opis (opcjonalny)
                             </label>
                             <textarea name="lead" 
                                       id="lead"
                                       rows="3" 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('lead') border-red-500 @enderror"
-                                      placeholder="Krótki opis postu, który będzie wyświetlany na liście...">{{ old('lead') }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('lead') border-red-500 @enderror">{{ old('lead') }}</textarea>
                             @error('lead')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -92,7 +158,7 @@
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
                                     <div class="flex text-sm text-gray-600">
-                                        <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                        <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
                                             <span id="file-select-text">Wybierz plik</span>
                                             <input id="photo" name="photo" type="file" class="sr-only" accept="image/*" onchange="showFileInfo(this)">
                                         </label>
@@ -130,8 +196,7 @@
                             <textarea name="content" 
                                       id="content"
                                       rows="12" 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors @error('content') border-red-500 @enderror"
-                                      placeholder="Napisz treść swojego postu... Możesz używać tagów HTML."
+                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('content') border-red-500 @enderror"
                                       required>{{ old('content') }}</textarea>
                             @error('content')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

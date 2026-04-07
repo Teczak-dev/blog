@@ -18,15 +18,18 @@ it('can create a post with photo upload', function () {
 
     $response = $this->post('/posts', [
         'title' => 'Test Post with Photo',
-        'slug' => 'test-post-with-photo',
+        'category' => 'test-category',
+        'category_color' => 'blue',
         'lead' => 'This is a test lead',
         'content' => 'This is test content',
         'photo' => $photo,
+        'tags' => 'test, photo',
+        'read_time_minutes' => 5,
     ]);
 
     $response->assertRedirect('/posts');
 
-    $post = Post::where('slug', 'test-post-with-photo')->first();
+    $post = Post::where('title', 'Test Post with Photo')->first();
     expect($post)->not->toBeNull();
     expect($post->photo)->toStartWith('posts/');
 
@@ -39,14 +42,17 @@ it('can create a post without photo', function () {
     
     $response = $this->post('/posts', [
         'title' => 'Test Post without Photo',
-        'slug' => 'test-post-without-photo',
+        'category' => 'test-category',
+        'category_color' => 'green', 
         'lead' => 'This is a test lead',
         'content' => 'This is test content',
+        'tags' => 'test',
+        'read_time_minutes' => 3,
     ]);
 
     $response->assertRedirect('/posts');
 
-    $post = Post::where('slug', 'test-post-without-photo')->first();
+    $post = Post::where('title', 'Test Post without Photo')->first();
     expect($post)->not->toBeNull();
     expect($post->photo)->toBeNull();
 });
@@ -65,7 +71,8 @@ it('validates photo upload requirements', function ($fileType, $expectedError) {
 
     $response = $this->post('/posts', [
         'title' => 'Test Post',
-        'slug' => 'test-post',
+        'category' => 'test-category',
+        'category_color' => 'blue',
         'content' => 'This is test content',
         'photo' => $invalidPhoto,
     ]);
@@ -78,21 +85,22 @@ it('validates photo upload requirements', function ($fileType, $expectedError) {
 ]);
 
 it('renders HTML content correctly in post show page', function () {
+    $user = User::factory()->create();
+    
     $post = Post::create([
         'title' => 'HTML Test Post',
-        'slug' => 'html-test-post',
+        'category' => 'html-test',
+        'category_color' => 'blue',
         'author' => 'Test Author',
+        'user_id' => $user->id,
         'lead' => 'This is <strong>bold lead</strong> with <em>italic text</em>',
         'content' => 'This is <h2>heading</h2> with <p>paragraph</p> and <a href="#">link</a>',
         'is_published' => true,
     ]);
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
-    
-    // Debug: print response content
-    // dump($response->getContent());
     
     $response->assertSee('<strong>bold lead</strong>', false);
     $response->assertSee('<em>italic text</em>', false);
@@ -103,19 +111,22 @@ it('renders HTML content correctly in post show page', function () {
 
 it('displays photo in post show page when available', function () {
     Storage::fake('public');
+    $user = User::factory()->create();
     $photo = UploadedFile::fake()->image('test.jpg');
     $photoPath = $photo->store('posts', 'public');
 
     $post = Post::create([
         'title' => 'Photo Test Post',
-        'slug' => 'photo-test-post',
+        'category' => 'photo-test',
+        'category_color' => 'blue',
         'author' => 'Test Author',
+        'user_id' => $user->id,
         'content' => 'Test content',
         'photo' => $photoPath,
         'is_published' => true,
     ]);
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
     $response->assertSee("storage/{$photoPath}");
@@ -123,15 +134,19 @@ it('displays photo in post show page when available', function () {
 });
 
 it('displays default emoji when no photo in post show page', function () {
+    $user = User::factory()->create();
+    
     $post = Post::create([
         'title' => 'No Photo Post',
-        'slug' => 'no-photo-post',
+        'category' => 'no-photo',
+        'category_color' => 'blue',
         'author' => 'Test Author',
+        'user_id' => $user->id,
         'content' => 'Test content',
         'is_published' => true,
     ]);
 
-    $response = $this->get("/posts/{$post->slug}");
+    $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
     $response->assertSee('📝');
@@ -139,13 +154,16 @@ it('displays default emoji when no photo in post show page', function () {
 
 it('displays post with photo in index page', function () {
     Storage::fake('public');
+    $user = User::factory()->create();
     $photo = UploadedFile::fake()->image('test.jpg');
     $photoPath = $photo->store('posts', 'public');
 
     Post::create([
         'title' => 'Index Photo Post',
-        'slug' => 'index-photo-post',
+        'category' => 'index-photo',
+        'category_color' => 'blue',
         'author' => 'Test Author',
+        'user_id' => $user->id,
         'content' => 'Test content',
         'photo' => $photoPath,
         'is_published' => true,

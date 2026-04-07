@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, string $slug)
+    public function store(Request $request, string $id)
     {
-        $post = Post::where('slug', $slug)->firstOrFail();
+        $post = Post::findOrFail($id);
 
         $parameters = $request->validate([
             'author_name' => ['required', 'string', 'max:255'],
@@ -25,7 +25,7 @@ class CommentController extends Controller
             'content' => $parameters['content'],
         ]);
 
-        return redirect()->route('posts.show', $slug)
+        return redirect()->route('posts.show', $id)
             ->with('success', 'Komentarz został dodany pomyślnie!');
     }
 }

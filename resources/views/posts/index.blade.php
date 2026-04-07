@@ -70,17 +70,39 @@
                     </div>
                     <div class="p-6">
                         <div class="flex items-center gap-2 mb-3">
-                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-semibold rounded-full">
-                                {{ $item->slug }}
-                            </span>
-                            <span class="text-gray-500 text-sm">5 min czytania</span>
+                            <!-- Category -->
+                            @if($item->category)
+                                <span class="px-4 py-1 {{ $item->getCategoryColorClasses() }} text-xs font-semibold rounded-full">
+                                    {{ $item->category }}
+                                </span>
+                            @endif
+                            
+                            <!-- Read time -->
+                            <span class="text-gray-500 text-sm ml-auto">{{ $item->read_time_minutes ?? 5 }} min czytania</span>
                         </div>
                         <h3 class="text-xl font-bold text-gray-900 mb-2 hover:text-indigo-600 cursor-pointer">
-                            <a href="{{ route('posts.show', $item->slug) }}">{{ $item->title }}</a>
+                            <a href="{{ route('posts.show', $item->id) }}">{{ $item->title }}</a>
                         </h3>
                         <div class="text-gray-600 text-sm mb-4 line-clamp-3">
                             {!! $item->lead ?? Str::limit(strip_tags($item->content), 150) !!}
                         </div>
+                        
+                        <!-- Hashtags -->
+                        @if($item->tags && count($item->tags) > 0)
+                            <div class="mb-4 flex flex-wrap gap-2">
+                                @foreach(array_slice($item->tags, 0, 3) as $tag)
+                                    <span class="text-indigo-600 text-sm font-medium">
+                                        #{{ strtolower(str_replace(' ', '', $tag)) }}
+                                    </span>
+                                @endforeach
+                                @if(count($item->tags) > 3)
+                                    <span class="text-gray-400 text-sm">
+                                        +{{ count($item->tags) - 3 }}
+                                    </span>
+                                @endif
+                            </div>
+                        @endif
+                        
                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-2">
                                 <div

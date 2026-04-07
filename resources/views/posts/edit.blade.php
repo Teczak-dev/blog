@@ -1,7 +1,20 @@
 <x-layout>
-    <div class="min-h-screen bg-gray-50 py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
+    <!-- Modern background with gradient -->
+    <div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50 py-8">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Back navigation -->
+            <div class="mb-6">
+                <a href="{{ route('posts.show', $post->id) }}" 
+                   class="inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                    </svg>
+                    Powrót do postu
+                </a>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden">
                 <div class="p-8 bg-gradient-to-br from-green-50 to-teal-50">
                     <h1 class="text-3xl font-bold bg-gradient-to-r from-green-600 to-teal-600 bg-clip-text text-transparent mb-2">
                         ✏️ Edytuj post
@@ -29,7 +42,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('posts.update', $post->slug) }}" enctype="multipart/form-data" class="space-y-6">
+                    <form method="POST" action="{{ route('posts.update', $post->id) }}" enctype="multipart/form-data" class="space-y-6">
                         @csrf
                         @method('PUT')
                         
@@ -49,26 +62,95 @@
                             @enderror
                         </div>
 
-                        <!-- Slug -->
-                        <div>
-                            <label for="slug" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Przyjazny adres URL <span class="text-red-500">*</span>
-                            </label>
-                            <input type="text" 
-                                   name="slug" 
-                                   id="slug"
-                                   value="{{ old('slug', $post->slug) }}" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('slug') border-red-500 @enderror"
-                                   required>
-                            @error('slug')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <!-- Category Settings Section -->
+                        <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border border-green-100">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                                🏷️ Kategoryzacja i oznaczenia
+                            </h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Category -->
+                                <div>
+                                    <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        📁 Kategoria (opcjonalna)
+                                    </label>
+                                    <input type="text" 
+                                           name="category" 
+                                           id="category"
+                                           value="{{ old('category', $post->category) }}" 
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category') border-red-500 @enderror"
+                                           placeholder="np. Laravel, React, Tutorial">
+                                    @error('category')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Auto-generowane z tytułu jeśli puste</p>
+                                </div>
+
+                                <!-- Category Color -->
+                                <div>
+                                    <label for="category_color" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        🎨 Kolor kategorii
+                                    </label>
+                                    <select name="category_color" 
+                                            id="category_color"
+                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category_color') border-red-500 @enderror">
+                                        @foreach(\App\Models\Post::getCategoryColors() as $value => $label)
+                                            <option value="{{ $value }}" 
+                                                    {{ old('category_color', $post->category_color ?? 'blue') === $value ? 'selected' : '' }}>
+                                                {{ $label }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('category_color')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Kolor tła dla kategorii</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                <!-- Tags -->
+                                <div>
+                                    <label for="tags" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        #️⃣ Hashtagi (opcjonalne)
+                                    </label>
+                                    <input type="text" 
+                                           name="tags" 
+                                           id="tags"
+                                           value="{{ old('tags', $post->tags ? implode(', ', $post->tags) : '') }}"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('tags') border-red-500 @enderror"
+                                           placeholder="React, Laravel, JavaScript">
+                                    @error('tags')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Oddziel przecinkami (np: React, Laravel)</p>
+                                </div>
+
+                                <!-- Read Time -->
+                                <div>
+                                    <label for="read_time_minutes" class="block text-sm font-semibold text-gray-700 mb-2">
+                                        ⏱️ Czas czytania (minuty)
+                                    </label>
+                                    <input type="number" 
+                                           name="read_time_minutes" 
+                                           id="read_time_minutes"
+                                           min="1" 
+                                           max="60"
+                                           value="{{ old('read_time_minutes', $post->read_time_minutes) }}"
+                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
+                                           placeholder="5">
+                                    @error('read_time_minutes')
+                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+                                    <p class="mt-1 text-xs text-gray-500">Auto-wyliczony z treści jeśli puste</p>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Lead -->
                         <div>
                             <label for="lead" class="block text-sm font-semibold text-gray-700 mb-2">
-                                Krótki opis (opcjonalny)
+                                📝 Krótki opis (opcjonalny)
                             </label>
                             <textarea name="lead" 
                                       id="lead"
@@ -154,7 +236,7 @@
 
                         <!-- Buttons -->
                         <div class="flex items-center justify-between pt-8 border-t border-gray-200">
-                            <a href="{{ route('posts.show', $post->slug) }}" 
+                            <a href="{{ route('posts.show', $post->id) }}" 
                                class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-md hover:shadow-lg">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
