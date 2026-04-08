@@ -39,15 +39,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="bg-gray-50 rounded-lg p-4">
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                         <div class="flex items-center justify-between mb-2">
                                             <div class="flex items-center gap-2">
-                                                <h4 class="font-semibold text-gray-900">${comment.author_name}</h4>
-                                                ${comment.is_from_logged_user ? '<span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Użytkownik</span>' : ''}
+                                                <h4 class="font-semibold text-gray-900 dark:text-gray-100">${comment.author_name}</h4>
+                                                ${comment.is_from_logged_user ? '<span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 text-xs rounded-full">Użytkownik</span>' : ''}
                                             </div>
-                                            <span class="text-sm text-gray-500">${comment.created_at}</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">${comment.created_at}</span>
                                         </div>
-                                        <div class="text-gray-700 leading-relaxed whitespace-pre-line">${comment.content}</div>
+                                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">${comment.content}</div>
                                     </div>
                                 </div>
                             </div>
@@ -133,15 +133,15 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 </div>
                                 <div class="flex-1">
-                                    <div class="bg-gray-50 rounded-lg p-4">
+                                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                         <div class="flex items-center justify-between mb-2">
                                             <div class="flex items-center gap-2">
-                                                <h4 class="font-semibold text-gray-900">${data.comment.author_name}</h4>
-                                                ${data.comment.is_from_logged_user ? '<span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">Użytkownik</span>' : ''}
+                                                <h4 class="font-semibold text-gray-900 dark:text-gray-100">${data.comment.author_name}</h4>
+                                                ${data.comment.is_from_logged_user ? '<span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-300 text-xs rounded-full">Użytkownik</span>' : ''}
                                             </div>
-                                            <span class="text-sm text-gray-500">teraz</span>
+                                            <span class="text-sm text-gray-500 dark:text-gray-400">teraz</span>
                                         </div>
-                                        <div class="text-gray-700 leading-relaxed whitespace-pre-line">${data.comment.content}</div>
+                                        <div class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">${data.comment.content}</div>
                                     </div>
                                 </div>
                             </div>
@@ -166,16 +166,16 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     
                     const successMessage = document.createElement('div');
-                    successMessage.className = 'success-message mb-4 bg-green-50 border-l-4 border-green-400 p-4';
+                    successMessage.className = 'success-message mb-4 bg-green-50 dark:bg-green-900/20 border-l-4 border-green-400 dark:border-green-500 p-4';
                     successMessage.innerHTML = `
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                <svg class="h-5 w-5 text-green-400 dark:text-green-300" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                             <div class="ml-3">
-                                <p class="text-sm text-green-700">${data.message}</p>
+                                <p class="text-sm text-green-700 dark:text-green-300">${data.message}</p>
                             </div>
                         </div>
                     `;

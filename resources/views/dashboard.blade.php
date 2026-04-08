@@ -54,120 +54,120 @@
                                     <span class="text-xl text-white">✍️</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-green-900">Nowy Post</h3>
-                                    <p class="text-sm text-green-600">Stwórz artykuł</p>
+                                    <h3 class="font-semibold text-green-900 dark:text-green-300">Nowy Post</h3>
+                                    <p class="text-sm text-green-600 dark:text-green-400">Stwórz artykuł</p>
                                 </div>
                             </div>
-                            <p class="text-green-700">Napisz i opublikuj nowy post w swoim blogu.</p>
+                            <p class="text-green-700 dark:text-green-300">Napisz i opublikuj nowy post w swoim blogu.</p>
                         </a>
 
                         <!-- Users Discovery Card -->
                         <a href="{{ route('users.index') }}" 
-                           class="group p-6 bg-gradient-to-br from-amber-50 to-orange-50 rounded-xl border border-amber-200 hover:border-amber-300 transition-all duration-200 hover:shadow-lg">
+                           class="group p-6 bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/20 rounded-xl border border-amber-200 dark:border-amber-700 hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-200 hover:shadow-lg">
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-amber-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <div class="w-12 h-12 bg-amber-600 dark:bg-amber-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                                     <span class="text-xl text-white">👤</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-amber-900">Użytkownicy</h3>
-                                    <p class="text-sm text-amber-600">Odkryj ludzi</p>
+                                    <h3 class="font-semibold text-amber-900 dark:text-amber-300">Użytkownicy</h3>
+                                    <p class="text-sm text-amber-600 dark:text-amber-400">Odkryj ludzi</p>
                                 </div>
                             </div>
-                            <p class="text-amber-700">Znajdź nowych autorów do obserwowania.</p>
+                            <p class="text-amber-700 dark:text-amber-300">Znajdź nowych autorów do obserwowania.</p>
                         </a>
 
                         <!-- Friends Card -->
                         <a href="{{ route('friends.index') }}" 
-                           class="group p-6 bg-gradient-to-br from-rose-50 to-pink-50 rounded-xl border border-rose-200 hover:border-rose-300 transition-all duration-200 hover:shadow-lg relative">
+                           class="group p-6 bg-gradient-to-br from-rose-50 to-pink-50 dark:from-rose-900/20 dark:to-pink-900/20 rounded-xl border border-rose-200 dark:border-rose-700 hover:border-rose-300 dark:hover:border-rose-600 transition-all duration-200 hover:shadow-lg relative">
                             @if(auth()->user()->getPendingFriendRequestsCount() > 0)
                                 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
                                     {{ auth()->user()->getPendingFriendRequestsCount() }}
                                 </span>
                             @endif
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-rose-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <div class="w-12 h-12 bg-rose-600 dark:bg-rose-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                                     <span class="text-xl text-white">👥</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-rose-900">Znajomi</h3>
-                                    <p class="text-sm text-rose-600">Zarządzaj relacjami</p>
+                                    <h3 class="font-semibold text-rose-900 dark:text-rose-300">Znajomi</h3>
+                                    <p class="text-sm text-rose-600 dark:text-rose-400">Zarządzaj relacjami</p>
                                 </div>
                             </div>
-                            <p class="text-rose-700">Sprawdź zaproszenia i znajomych.</p>
+                            <p class="text-rose-700 dark:text-rose-300">Sprawdź zaproszenia i znajomych.</p>
                         </a>
 
                         <!-- Messages Card -->
                         <a href="{{ route('conversations.index') }}" 
-                           class="group p-6 bg-gradient-to-br from-cyan-50 to-blue-50 rounded-xl border border-cyan-200 hover:border-cyan-300 transition-all duration-200 hover:shadow-lg relative">
+                           class="group p-6 bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/20 dark:to-blue-900/20 rounded-xl border border-cyan-200 dark:border-cyan-700 hover:border-cyan-300 dark:hover:border-cyan-600 transition-all duration-200 hover:shadow-lg relative">
                             @if(auth()->user()->getUnreadMessagesCount() > 0)
                                 <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-bold">
                                     {{ auth()->user()->getUnreadMessagesCount() }}
                                 </span>
                             @endif
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-cyan-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <div class="w-12 h-12 bg-cyan-600 dark:bg-cyan-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                                     <span class="text-xl text-white">💬</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-cyan-900">Wiadomości</h3>
-                                    <p class="text-sm text-cyan-600">Rozmowy prywatne</p>
+                                    <h3 class="font-semibold text-cyan-900 dark:text-cyan-300">Wiadomości</h3>
+                                    <p class="text-sm text-cyan-600 dark:text-cyan-400">Rozmowy prywatne</p>
                                 </div>
                             </div>
-                            <p class="text-cyan-700">Sprawdź nowe wiadomości od znajomych.</p>
+                            <p class="text-cyan-700 dark:text-cyan-300">Sprawdź nowe wiadomości od znajomych.</p>
                         </a>
 
                         <!-- Profile Card -->
                         <a href="{{ route('profile.edit') }}" 
-                           class="group p-6 bg-gradient-to-br from-purple-50 to-violet-50 rounded-xl border border-purple-200 hover:border-purple-300 transition-all duration-200 hover:shadow-lg">
+                           class="group p-6 bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 rounded-xl border border-purple-200 dark:border-purple-700 hover:border-purple-300 dark:hover:border-purple-600 transition-all duration-200 hover:shadow-lg">
                             <div class="flex items-center gap-4 mb-4">
-                                <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+                                <div class="w-12 h-12 bg-purple-600 dark:bg-purple-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
                                     <span class="text-xl text-white">⚙️</span>
                                 </div>
                                 <div>
-                                    <h3 class="font-semibold text-purple-900">Ustawienia</h3>
-                                    <p class="text-sm text-purple-600">Twoje konto</p>
+                                    <h3 class="font-semibold text-purple-900 dark:text-purple-300">Ustawienia</h3>
+                                    <p class="text-sm text-purple-600 dark:text-purple-400">Twoje konto</p>
                                 </div>
                             </div>
-                            <p class="text-purple-700">Edytuj profil i preferencje powiadomień.</p>
+                            <p class="text-purple-700 dark:text-purple-300">Edytuj profil i preferencje powiadomień.</p>
                         </a>
                     </div>
 
                     <!-- Quick Stats -->
-                    <div class="mt-8 p-6 bg-gray-50 rounded-xl">
-                        <h3 class="font-semibold text-gray-900 mb-4">Twoje statystyki</h3>
+                    <div class="mt-8 p-6 bg-gray-50 dark:bg-gray-700/50 rounded-xl">
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100 mb-4">Twoje statystyki</h3>
                         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-indigo-600">{{ \App\Models\Post::where('user_id', auth()->id())->count() }}</div>
-                                <div class="text-sm text-gray-600">Twoje posty</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">{{ \App\Models\Post::where('user_id', auth()->id())->count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Twoje posty</div>
                             </div>
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-green-600">{{ auth()->user()->followers()->count() }}</div>
-                                <div class="text-sm text-gray-600">Obserwujących</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-green-600 dark:text-green-400">{{ auth()->user()->followers()->count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Obserwujących</div>
                             </div>
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-blue-600">{{ auth()->user()->following()->count() }}</div>
-                                <div class="text-sm text-gray-600">Obserwujesz</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ auth()->user()->following()->count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Obserwujesz</div>
                             </div>
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-purple-600">{{ auth()->user()->getFriends()->count() }}</div>
-                                <div class="text-sm text-gray-600">Znajomi</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">{{ auth()->user()->getFriends()->count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Znajomi</div>
                             </div>
                         </div>
                         
                         <!-- Global Stats -->
-                        <h4 class="font-semibold text-gray-900 mt-6 mb-4">Statystyki platformy</h4>
+                        <h4 class="font-semibold text-gray-900 dark:text-gray-100 mt-6 mb-4">Statystyki platformy</h4>
                         <div class="grid gap-4 sm:grid-cols-3">
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-orange-600">{{ \App\Models\Post::count() }}</div>
-                                <div class="text-sm text-gray-600">Wszystkie posty</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">{{ \App\Models\Post::count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Wszystkie posty</div>
                             </div>
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-pink-600">{{ \App\Models\User::whereNotNull('email_verified_at')->count() }}</div>
-                                <div class="text-sm text-gray-600">Użytkownicy</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-pink-600 dark:text-pink-400">{{ \App\Models\User::whereNotNull('email_verified_at')->count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Użytkownicy</div>
                             </div>
-                            <div class="text-center p-4 bg-white rounded-lg">
-                                <div class="text-2xl font-bold text-teal-600">{{ \App\Models\Comment::count() }}</div>
-                                <div class="text-sm text-gray-600">Komentarze</div>
+                            <div class="text-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <div class="text-2xl font-bold text-teal-600 dark:text-teal-400">{{ \App\Models\Comment::count() }}</div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400">Komentarze</div>
                             </div>
                         </div>
                     </div>

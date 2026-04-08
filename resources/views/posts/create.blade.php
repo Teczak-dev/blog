@@ -1,25 +1,26 @@
 <x-layout>
-    <div class="min-h-screen bg-gray-50 py-12">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-lg sm:rounded-lg">
-                <div class="p-8 bg-gradient-to-br from-indigo-50 to-purple-50">
-                    <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
+                <div class="p-8 bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/30 dark:to-purple-900/30">
+                    <h1 class="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-400 dark:to-purple-400 bg-clip-text text-transparent mb-2">
                         ✍️ Utwórz nowy post
                     </h1>
-                    <p class="text-gray-600 mb-8">Podziel się swoimi przemyśleniami ze światem</p>
+                    <p class="text-gray-600 dark:text-gray-400 mb-8">Podziel się swoimi przemyśleniami ze światem</p>
+                </div>
                 
                 <div class="p-8">
                     @if ($errors->any())
-                        <div class="mb-6 bg-red-50 border-l-4 border-red-400 p-4">
+                        <div class="mb-6 bg-red-50 dark:bg-red-900/30 border-l-4 border-red-400 dark:border-red-500 p-4">
                             <div class="flex">
                                 <div class="flex-shrink-0">
-                                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                    <svg class="h-5 w-5 text-red-400 dark:text-red-300" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
                                     </svg>
                                 </div>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">Wystąpiły błędy walidacji:</h3>
-                                    <ul class="mt-2 text-sm text-red-700 list-disc ml-5">
+                                    <h3 class="text-sm font-medium text-red-800 dark:text-red-300">Wystąpiły błędy walidacji:</h3>
+                                    <ul class="mt-2 text-sm text-red-700 dark:text-red-300 list-disc ml-5">
                                         @foreach ($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
@@ -34,52 +35,52 @@
                         
                         <!-- Title -->
                         <div>
-                            <label for="title" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label for="title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Tytuł postu <span class="text-red-500">*</span>
                             </label>
                             <input type="text" 
                                    name="title" 
                                    id="title"
                                    value="{{ old('title') }}" 
-                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('title') border-red-500 @enderror"
+                                   class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('title') border-red-500 @enderror"
                                    required>
                             @error('title')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Category Settings Section -->
-                        <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 rounded-xl border border-green-100">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                        <div class="p-6 bg-gradient-to-r from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-xl border border-green-100 dark:border-green-700">
+                            <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2">
                                 🏷️ Kategoryzacja i oznaczenia
                             </h3>
                             
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Category -->
                                 <div>
-                                    <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label for="category" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         📁 Kategoria (opcjonalna)
                                     </label>
                                     <input type="text" 
                                            name="category" 
                                            id="category"
                                            value="{{ old('category') }}" 
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category') border-red-500 @enderror"
+                                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category') border-red-500 @enderror"
                                            placeholder="np. Laravel, React, Tutorial">
                                     @error('category')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
-                                    <p class="mt-1 text-xs text-gray-500">Auto-generowane z tytułu jeśli puste</p>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Auto-generowane z tytułu jeśli puste</p>
                                 </div>
 
                                 <!-- Category Color -->
                                 <div>
-                                    <label for="category_color" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label for="category_color" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         🎨 Kolor kategorii
                                     </label>
                                     <select name="category_color" 
                                             id="category_color"
-                                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category_color') border-red-500 @enderror">
+                                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('category_color') border-red-500 @enderror">
                                         @foreach(\App\Models\Post::getCategoryColors() as $value => $label)
                                             <option value="{{ $value }}" 
                                                     {{ old('category_color', 'blue') === $value ? 'selected' : '' }}>
@@ -88,33 +89,33 @@
                                         @endforeach
                                     </select>
                                     @error('category_color')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
-                                    <p class="mt-1 text-xs text-gray-500">Kolor tła dla kategorii</p>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kolor tła dla kategorii</p>
                                 </div>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                 <!-- Tags -->
                                 <div>
-                                    <label for="tags" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label for="tags" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         #️⃣ Hashtagi (opcjonalne)
                                     </label>
                                     <input type="text" 
                                            name="tags" 
                                            id="tags"
                                            value="{{ old('tags') }}"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('tags') border-red-500 @enderror"
+                                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('tags') border-red-500 @enderror"
                                            placeholder="React, Laravel, JavaScript">
                                     @error('tags')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
-                                    <p class="mt-1 text-xs text-gray-500">Oddziel przecinkami (np: React, Laravel)</p>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Oddziel przecinkami (np: React, Laravel)</p>
                                 </div>
 
                                 <!-- Read Time -->
                                 <div>
-                                    <label for="read_time_minutes" class="block text-sm font-semibold text-gray-700 mb-2">
+                                    <label for="read_time_minutes" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         ⏱️ Czas czytania (minuty)
                                     </label>
                                     <input type="number" 
@@ -123,59 +124,59 @@
                                            min="1" 
                                            max="60"
                                            value="{{ old('read_time_minutes') }}"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
+                                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
                                            placeholder="5">
                                     @error('read_time_minutes')
-                                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                     @enderror
-                                    <p class="mt-1 text-xs text-gray-500">Auto-wyliczony z treści jeśli puste</p>
+                                    <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Auto-wyliczony z treści jeśli puste</p>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Lead -->
                         <div>
-                            <label for="lead" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label for="lead" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 📝 Krótki opis (opcjonalny)
                             </label>
                             <textarea name="lead" 
                                       id="lead"
                                       rows="3" 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('lead') border-red-500 @enderror">{{ old('lead') }}</textarea>
+                                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('lead') border-red-500 @enderror">{{ old('lead') }}</textarea>
                             @error('lead')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Photo Upload -->
                         <div>
-                            <label for="photo" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label for="photo" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Zdjęcie główne
                             </label>
-                            <div id="photo-upload-area" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-blue-400 transition-colors">
+                            <div id="photo-upload-area" class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg hover:border-blue-400 dark:hover:border-blue-500 transition-colors">
                                 <div class="space-y-1 text-center">
-                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                         <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                    <div class="flex text-sm text-gray-600">
-                                        <label for="photo" class="relative cursor-pointer bg-white rounded-md font-medium text-green-600 hover:text-green-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
+                                    <div class="flex text-sm text-gray-600 dark:text-gray-400">
+                                        <label for="photo" class="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-green-600 dark:text-green-400 hover:text-green-500 dark:hover:text-green-300 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-green-500">
                                             <span id="file-select-text">Wybierz plik</span>
                                             <input id="photo" name="photo" type="file" class="sr-only" accept="image/*" onchange="showFileInfo(this)">
                                         </label>
                                         <p class="pl-1">lub przeciągnij i upuść</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">PNG, JPG, GIF, WEBP do 5MB</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">PNG, JPG, GIF, WEBP do 5MB</p>
                                 </div>
                             </div>
                             
                             <!-- Selected file info -->
-                            <div id="selected-file-info" class="hidden mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                            <div id="selected-file-info" class="hidden mt-3 p-3 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg">
                                 <div class="flex items-center">
-                                    <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <svg class="h-5 w-5 text-green-400 dark:text-green-300" fill="currentColor" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                     </svg>
-                                    <span class="ml-2 text-sm text-green-700">Wybrano plik: <span id="file-name"></span></span>
-                                    <button type="button" onclick="clearFileSelection()" class="ml-auto text-green-600 hover:text-green-800">
+                                    <span class="ml-2 text-sm text-green-700 dark:text-green-300">Wybrano plik: <span id="file-name"></span></span>
+                                    <button type="button" onclick="clearFileSelection()" class="ml-auto text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300">
                                         <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
@@ -184,39 +185,39 @@
                             </div>
                             
                             @error('photo')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Content -->
                         <div>
-                            <label for="content" class="block text-sm font-semibold text-gray-700 mb-2">
+                            <label for="content" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                 Treść postu <span class="text-red-500">*</span>
                             </label>
                             <textarea name="content" 
                                       id="content"
                                       rows="12" 
-                                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('content') border-red-500 @enderror"
+                                      class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('content') border-red-500 @enderror"
                                       required>{{ old('content') }}</textarea>
                             @error('content')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
-                            <p class="mt-2 text-sm text-gray-500">
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                 💡 Wskazówka: Możesz używać tagów HTML jak &lt;strong&gt;, &lt;em&gt;, &lt;h2&gt; itp.
                             </p>
                         </div>
 
                         <!-- Buttons -->
-                        <div class="flex items-center justify-between pt-8 border-t border-gray-200">
+                        <div class="flex items-center justify-between pt-8 border-t border-gray-200 dark:border-gray-600">
                             <a href="{{ route('posts.index') }}" 
-                               class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-300 rounded-xl text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-md hover:shadow-lg">
+                               class="inline-flex items-center gap-2 px-6 py-3 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-200 shadow-md hover:shadow-lg">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                                 </svg>
                                 Anuluj
                             </a>
                             <button type="submit" 
-                                    class="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                                    class="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>

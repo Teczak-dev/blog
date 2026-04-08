@@ -23,7 +23,7 @@
                             👤 Użytkownicy
                         </a>
                         <a href="{{ route('friends.index') }}"
-                            class="relative text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50">
+                            class="relative text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50 dark:hover:bg-gray-700">
                             👥 Znajomi
                             @if(auth()->user()->getPendingFriendRequestsCount() > 0)
                                 <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -110,7 +110,7 @@
                                         </svg>
                                         Profil
                                     </a>
-                                    <div class="border-t border-gray-100 my-2"></div>
+                                    <div class="border-t border-gray-100 dark:border-gray-600 my-2"></div>
                                     <form method="POST" action="{{ route('logout') }}" class="block">
                                         @csrf
                                         <button type="submit" class="flex items-center gap-2 px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 w-full text-left">

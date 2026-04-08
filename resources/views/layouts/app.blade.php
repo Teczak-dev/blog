@@ -19,20 +19,20 @@
             <script type="module" src="{{ asset('build/assets/app-BFW7sici.js') }}"></script>
         @endif
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+    <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
+        <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20">
             <!-- Use the unified navigation -->
             @include('partials.navigation')
 
             <!-- Page Heading -->
             @isset($header)
-                <header class="bg-white/80 backdrop-blur-sm shadow-sm border-b border-gray-200">
+                <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-sm border-b border-gray-200 dark:border-gray-700">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center">
+                            <div class="w-10 h-10 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 rounded-xl flex items-center justify-center">
                                 <span class="text-white text-lg">🏠</span>
                             </div>
-                            {{ $header }}
+                            <div class="text-gray-800 dark:text-gray-200">{{ $header }}</div>
                         </div>
                     </div>
                 </header>

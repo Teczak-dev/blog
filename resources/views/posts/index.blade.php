@@ -54,10 +54,10 @@
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Success Messages -->
         @if (session('success'))
-            <div class="mb-8 bg-green-50 border-l-4 border-green-500 p-6 rounded-r-xl">
+            <div class="mb-8 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-400 p-6 rounded-r-xl">
                 <div class="flex items-center">
                     <span class="text-2xl mr-3">✅</span>
-                    <p class="text-green-700 font-medium">{{ session('success') }}</p>
+                    <p class="text-green-700 dark:text-green-300 font-medium">{{ session('success') }}</p>
                 </div>
             </div>
         @endif
@@ -87,8 +87,8 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Category Filter -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Kategoria</label>
-                            <select name="category" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Kategoria</label>
+                            <select name="category" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                 <option value="">Wszystkie kategorie</option>
                                 @foreach($categories as $category)
                                     <option value="{{ $category }}" {{ request('category') === $category ? 'selected' : '' }}>
@@ -100,8 +100,8 @@
                         
                         <!-- Author Filter -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Autor</label>
-                            <select name="author" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Autor</label>
+                            <select name="author" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                 <option value="">Wszyscy autorzy</option>
                                 @foreach($authors as $author)
                                     <option value="{{ $author }}" {{ request('author') === $author ? 'selected' : '' }}>
@@ -113,8 +113,8 @@
                         
                         <!-- Tag Filter -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Tag</label>
-                            <select name="tag" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Tag</label>
+                            <select name="tag" class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                 <option value="">Wszystkie tagi</option>
                                 @foreach($tags as $tag)
                                     <option value="{{ $tag }}" {{ request('tag') === $tag ? 'selected' : '' }}>
@@ -126,40 +126,40 @@
                         
                         <!-- Date Range -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Data od</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data od</label>
                             <input type="date" name="date_from" value="{{ request('date_from') }}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
                         
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Data do</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Data do</label>
                             <input type="date" name="date_to" value="{{ request('date_to') }}" 
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                   class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                         </div>
                         
                         <!-- Reading Time Range -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Czas czytania (min)</label>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Czas czytania (min)</label>
                             <div class="flex gap-2">
                                 <input type="number" name="read_time_min" value="{{ request('read_time_min') }}" 
                                        placeholder="Od" min="1" max="60"
-                                       class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                       class="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                                 <input type="number" name="read_time_max" value="{{ request('read_time_max') }}" 
                                        placeholder="Do" min="1" max="60"
-                                       class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                       class="w-1/2 px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                             </div>
                         </div>
                     </div>
                     
-                    <div class="flex items-center gap-4 pt-4 border-t border-gray-200">
+                    <div class="flex items-center gap-4 pt-4 border-t border-gray-200 dark:border-gray-600">
                         <button type="submit" 
-                                class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors">
+                                class="px-6 py-2 bg-indigo-600 dark:bg-indigo-500 text-white rounded-lg hover:bg-indigo-700 dark:hover:bg-indigo-600 transition-colors">
                             Zastosuj filtry
                         </button>
                         
                         @if(request()->hasAny(['category', 'author', 'tag', 'date_from', 'date_to', 'read_time_min', 'read_time_max', 'search']))
                             <a href="{{ route('posts.index') }}" 
-                               class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                               class="px-6 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                 Wyczyść wszystkie
                             </a>
                         @endif
@@ -167,49 +167,49 @@
                 </div>
                 
                 @if(request('search'))
-                    <div class="flex items-center justify-between bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div class="flex items-center justify-between bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
                         <div class="flex items-center gap-2">
-                            <span class="text-blue-800 font-medium">
+                            <span class="text-blue-800 dark:text-blue-300 font-medium">
                                 📝 Wyniki dla: "{{ request('search') }}"
                             </span>
-                            <span class="text-blue-600">
+                            <span class="text-blue-600 dark:text-blue-400">
                                 ({{ $posts->total() }} {{ $posts->total() == 1 ? 'post' : 'postów' }})
                             </span>
                         </div>
                         <a href="{{ route('posts.index') }}" 
-                           class="text-blue-600 hover:text-blue-800 font-medium">
+                           class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium">
                             ✖️ Wyczyść
                         </a>
                     </div>
                 @endif
                 
                 @if(request()->hasAny(['category', 'author', 'tag', 'date_from', 'date_to', 'read_time_min', 'read_time_max']))
-                    <div class="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div class="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-4">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <span class="text-green-800 font-medium">🎯 Aktywne filtry:</span>
+                                <span class="text-green-800 dark:text-green-300 font-medium">🎯 Aktywne filtry:</span>
                                 <div class="flex flex-wrap gap-2">
                                     @if(request('category'))
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">{{ request('category') }}</span>
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300 text-xs rounded">{{ request('category') }}</span>
                                     @endif
                                     @if(request('author'))
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">{{ request('author') }}</span>
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300 text-xs rounded">{{ request('author') }}</span>
                                     @endif
                                     @if(request('tag'))
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">#{{ request('tag') }}</span>
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300 text-xs rounded">#{{ request('tag') }}</span>
                                     @endif
                                     @if(request('date_from') || request('date_to'))
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300 text-xs rounded">
                                             {{ request('date_from', '...') }} - {{ request('date_to', '...') }}
                                         </span>
                                     @endif
                                     @if(request('read_time_min') || request('read_time_max'))
-                                        <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-300 text-xs rounded">
                                             {{ request('read_time_min', '0') }}-{{ request('read_time_max', '∞') }} min
                                         </span>
                                     @endif
                                 </div>
-                                <span class="text-green-600">({{ $posts->total() }} {{ $posts->total() == 1 ? 'post' : 'postów' }})</span>
+                                <span class="text-green-600 dark:text-green-400">({{ $posts->total() }} {{ $posts->total() == 1 ? 'post' : 'postów' }})</span>
                             </div>
                         </div>
                     </div>
