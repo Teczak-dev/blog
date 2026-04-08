@@ -15,12 +15,12 @@
         @if(app()->environment('local'))
             @vite(['resources/css/app.css', 'resources/js/app.js'])
         @else
-            <link rel="stylesheet" href="{{ asset('build/assets/app-BwTzgqNR.css') }}">
-            <script type="module" src="{{ asset('build/assets/app-BFW7sici.js') }}"></script>
+            <link rel="stylesheet" href="{{ asset('build/assets/app-B9MVW27g.css') }}">
+            <script type="module" src="{{ asset('build/assets/app-BVsxYmEC.js') }}"></script>
         @endif
     </head>
     <body class="font-sans antialiased bg-gray-50 dark:bg-gray-900">
-        <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-purple-900/20">
+        <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
             <!-- Use the unified navigation -->
             @include('partials.navigation')
 
@@ -39,7 +39,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            <main class="bg-gray-50 dark:bg-gray-900">
                 {{ $slot }}
             </main>
         </div>

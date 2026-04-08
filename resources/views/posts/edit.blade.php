@@ -1,6 +1,6 @@
 <x-layout>
     <!-- Modern background with gradient -->
-    <div class="min-h-screen bg-gradient-to-br from-green-50 via-white to-teal-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Back navigation -->
@@ -138,7 +138,7 @@
                                            min="1" 
                                            max="60"
                                            value="{{ old('read_time_minutes', $post->read_time_minutes) }}"
-                                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
+                                           class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors @error('read_time_minutes') border-red-500 @enderror"
                                            placeholder="5">
                                     @error('read_time_minutes')
                                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>

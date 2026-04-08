@@ -1,4 +1,5 @@
 <x-layout>
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Hero Section -->
     <div class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -51,7 +52,7 @@
     @endauth
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-gray-50 dark:bg-gray-900">
         <!-- Success Messages -->
         @if (session('success'))
             <div class="mb-8 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-500 dark:border-green-400 p-6 rounded-r-xl">
@@ -418,10 +419,10 @@
 
                 if (response.ok) {
                     if (isFollowing) {
-                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-blue-600 text-white hover:bg-blue-700';
+                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-blue-600 dark:bg-blue-500 text-white hover:bg-blue-700 dark:hover:bg-blue-600';
                         button.textContent = 'Obserwuj';
                     } else {
-                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300';
+                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500';
                         button.textContent = 'Obserwujesz';
                     }
                 } else {
@@ -444,7 +445,7 @@
                 });
 
                 if (response.ok) {
-                    button.className = 'px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded';
+                    button.className = 'px-2 py-1 text-xs font-medium bg-yellow-100 dark:bg-yellow-800 text-yellow-700 dark:text-yellow-200 rounded';
                     button.textContent = 'Oczekuje';
                     button.onclick = null;
                 } else {
@@ -467,7 +468,7 @@
                 });
 
                 if (response.ok) {
-                    button.className = 'px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded';
+                    button.className = 'px-2 py-1 text-xs font-medium bg-green-100 dark:bg-green-800 text-green-700 dark:text-green-200 rounded';
                     button.textContent = '✓';
                     button.onclick = null;
                 } else {
@@ -479,5 +480,7 @@
             }
         }
     </script>
+    
+    </div> <!-- End full page wrapper -->
 
 </x-layout>

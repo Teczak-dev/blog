@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="py-12">
+    <div class="py-12 min-h-screen bg-gray-50 dark:bg-gray-900">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 shadow rounded-lg overflow-hidden">
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -9,7 +9,7 @@
                     <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $friends->count() }} znajomych</p>
                 </div>
                 
-                <div class="p-6">
+                <div class="p-6 bg-white dark:bg-gray-800">
                     @if($friends->count() > 0)
                         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             @foreach($friends as $friend)

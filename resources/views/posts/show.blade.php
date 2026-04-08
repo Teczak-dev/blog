@@ -304,27 +304,27 @@
 
                         <!-- Comment Content -->
                         <div>
-                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Komentarz *
                             </label>
                             <textarea id="content" name="content" required rows="4"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
                                 placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
                             @error('content')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Submit Button -->
                         <div class="flex items-center gap-4">
                             <button type="submit"
-                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
                                 Wyślij komentarz
                             </button>
-                            <p class="text-sm text-gray-500">* Pola wymagane</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">* Pola wymagane</p>
                         </div>
                     </form>
                 @endif
@@ -364,7 +364,7 @@
                             <button id="load-more-comments" 
                                 data-post-id="{{ $post->id }}"
                                 data-offset="10"
-                                class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 font-medium rounded-xl hover:bg-gray-200 transition-all duration-200">
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 font-medium rounded-xl hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-200">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                                 </svg>
@@ -373,7 +373,7 @@
                         </div>
                     @endif
                 @else
-                    <div class="text-center py-8 text-gray-500">
+                    <div class="text-center py-8 text-gray-500 dark:text-gray-400">
                         <p>Brak komentarzy. Bądź pierwszy który skomentuje ten post!</p>
                     </div>
                 @endif
@@ -384,11 +384,11 @@
         <!-- Related Posts -->
         @if($relatedPosts->count() > 0)
         <section class="mt-12">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6">Powiązane artykuły</h2>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Powiązane artykuły</h2>
             <div class="grid gap-6 md:grid-cols-{{ $relatedPosts->count() <= 3 ? $relatedPosts->count() : '3' }}">
                 @foreach($relatedPosts as $relatedPost)
                 <a href="{{ route('posts.show', $relatedPost->id) }}" class="group">
-                    <article class="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+                    <article class="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                         <div class="h-32 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                             @if($relatedPost->photo)
                                 <img src="{{ asset('storage/' . $relatedPost->photo) }}" alt="{{ $relatedPost->title }}" 
@@ -405,10 +405,10 @@
                                     {{ $relatedPost->category }}
                                 </span>
                             </div>
-                            <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 line-clamp-2 mb-2">
+                            <h3 class="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 line-clamp-2 mb-2">
                                 {{ $relatedPost->title }}
                             </h3>
-                            <p class="text-sm text-gray-500">{{ $relatedPost->read_time_minutes }} min czytania</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $relatedPost->read_time_minutes }} min czytania</p>
                         </div>
                     </article>
                 </a>
