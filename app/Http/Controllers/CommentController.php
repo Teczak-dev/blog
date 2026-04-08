@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
@@ -25,6 +26,9 @@ class CommentController extends Controller
                 'content' => $parameters['content'],
                 'is_approved' => true, // Logged users are auto-approved
             ]);
+
+            // Dispatch event for notifications (only for approved comments)
+            CommentCreated::dispatch($comment);
 
             $message = 'Komentarz został dodany pomyślnie!';
         } else {
@@ -113,6 +117,9 @@ class CommentController extends Controller
                 'content' => $parameters['content'],
                 'is_approved' => true, // Logged users are auto-approved
             ]);
+
+            // Dispatch event for notifications (only for approved replies)
+            CommentCreated::dispatch($reply);
 
             $message = 'Odpowiedź została dodana pomyślnie!';
         } else {

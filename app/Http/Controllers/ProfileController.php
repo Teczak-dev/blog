@@ -38,6 +38,22 @@ class ProfileController extends Controller
     }
 
     /**
+     * Update the user's notification preferences.
+     */
+    public function updateNotifications(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'email_notifications' => ['nullable', 'boolean'],
+        ]);
+
+        $request->user()->update([
+            'email_notifications' => $request->boolean('email_notifications'),
+        ]);
+
+        return Redirect::route('profile.edit')->with('status', 'notifications-updated');
+    }
+
+    /**
      * Delete the user's account.
      */
     public function destroy(Request $request): RedirectResponse
