@@ -27,6 +27,29 @@
         </div>
     </div>
 
+    @auth
+    <!-- Filter Tabs -->
+    <div class="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="-mb-px flex space-x-8">
+                <a href="{{ route('posts.index') }}" 
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors {{ request('filter') === null ? 'border-indigo-500 text-indigo-600' : '' }}">
+                    Wszystkie posty
+                </a>
+                <a href="{{ route('posts.index', ['filter' => 'following']) }}" 
+                   class="border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm transition-colors {{ request('filter') === 'following' ? 'border-indigo-500 text-indigo-600' : '' }}">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                        </svg>
+                        Obserwowane
+                    </div>
+                </a>
+            </nav>
+        </div>
+    </div>
+    @endauth
+
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Success Messages -->
@@ -249,11 +272,73 @@
                             <div class="flex items-center gap-2">
                                 <div
                                     class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-semibold">
-                                    {{ $item->author[0] }}
+                                    {{ $item->user ? $item->user->name[0] : ($item->author[0] ?? 'U') }}
                                 </div>
-                                <span class="text-sm text-gray-700 font-medium">{{ $item->author }}</span>
+                                @if($item->user)
+                                    <a href="{{ route('users.profile', $item->user) }}" 
+                                       class="text-sm text-gray-700 font-medium hover:text-blue-600 hover:underline">
+                                        {{ $item->user->name }}
+                                    </a>
+                                @else
+                                    <span class="text-sm text-gray-700 font-medium">{{ $item->author ?? 'Nieznany autor' }}</span>
+                                @endif
                             </div>
-                            <span class="text-sm text-gray-500">{{ $item->created_at->diffForHumans() }}</span>
+                            
+                            <!-- Social Actions - tylko jeśli to nie jest nasz post i jesteśmy zalogowani -->
+                            @auth
+                                @if($item->user && $item->user->id !== auth()->id())
+                                    <div class="flex items-center gap-1">
+                                        @php
+                                            $currentUser = Auth::user();
+                                            $isFollowing = $currentUser->isFollowing($item->user);
+                                            $friendship = \App\Models\Friendship::where(function ($query) use ($currentUser, $item) {
+                                                $query->where('requester_id', $currentUser->id)->where('addressee_id', $item->user->id);
+                                            })->orWhere(function ($query) use ($currentUser, $item) {
+                                                $query->where('requester_id', $item->user->id)->where('addressee_id', $currentUser->id);
+                                            })->first();
+                                            
+                                            $canSendFriendRequest = !$friendship;
+                                            $canAcceptFriendRequest = $friendship && $friendship->status === 'pending' && $friendship->addressee_id === $currentUser->id;
+                                            $isFriend = $friendship && $friendship->status === 'accepted';
+                                            $requestSent = $friendship && $friendship->status === 'pending' && $friendship->requester_id === $currentUser->id;
+                                        @endphp
+
+                                        <!-- Follow Button -->
+                                        <button 
+                                            onclick="toggleFollow({{ $item->user->id }}, this)"
+                                            class="px-2 py-1 text-xs font-medium rounded transition-colors duration-200 {{ $isFollowing ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700' }}">
+                                            {{ $isFollowing ? 'Obserwujesz' : 'Obserwuj' }}
+                                        </button>
+
+                                        <!-- Friend Button -->
+                                        @if($isFriend)
+                                            <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded">
+                                                ✓
+                                            </span>
+                                        @elseif($canAcceptFriendRequest)
+                                            <button 
+                                                onclick="acceptFriendRequest({{ $item->user->id }}, this)"
+                                                class="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700">
+                                                Zaakceptuj
+                                            </button>
+                                        @elseif($requestSent)
+                                            <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded">
+                                                Oczekuje
+                                            </span>
+                                        @elseif($canSendFriendRequest)
+                                            <button 
+                                                onclick="sendFriendRequest({{ $item->user->id }}, this)"
+                                                class="px-2 py-1 text-xs font-medium bg-green-600 text-white rounded hover:bg-green-700">
+                                                Znajomi
+                                            </button>
+                                        @endif
+                                    </div>
+                                @else
+                                    <span class="text-sm text-gray-500">{{ $item->created_at->diffForHumans() }}</span>
+                                @endif
+                            @else
+                                <span class="text-sm text-gray-500">{{ $item->created_at->diffForHumans() }}</span>
+                            @endauth
                         </div>
                     </div>
                 </article>
@@ -264,20 +349,37 @@
                 <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-6">
                     <span class="text-4xl">📝</span>
                 </div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">Brak postów</h3>
-                <p class="text-gray-600 mb-6 max-w-sm mx-auto">
-                    Nie ma jeszcze żadnych postów do wyświetlenia. 
-                    @if (auth()->check())
-                        Napisz pierwszy post!
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">
+                    @if(request('filter') === 'following')
+                        Brak postów od obserwowanych
                     @else
-                        Zaloguj się, aby napisać pierwszy post!
+                        Brak postów
+                    @endif
+                </h3>
+                <p class="text-gray-600 mb-6 max-w-sm mx-auto">
+                    @if(request('filter') === 'following')
+                        Nie ma jeszcze postów od osób, które obserwujesz. Znajdź ciekawych autorów do obserwowania!
+                    @else
+                        Nie ma jeszcze żadnych postów do wyświetlenia. 
+                        @if (auth()->check())
+                            Napisz pierwszy post!
+                        @else
+                            Zaloguj się, aby napisać pierwszy post!
+                        @endif
                     @endif
                 </p>
                 @if (auth()->check())
-                    <a href="{{ route('posts.create') }}" 
-                       class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
-                        ✍️ Napisz pierwszy post
-                    </a>
+                    @if(request('filter') === 'following')
+                        <a href="{{ route('posts.index') }}" 
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            👥 Zobacz wszystkie posty
+                        </a>
+                    @else
+                        <a href="{{ route('posts.create') }}" 
+                           class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
+                            ✍️ Napisz pierwszy post
+                        </a>
+                    @endif
                 @else
                     <a href="{{ route('login') }}" 
                        class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105">
@@ -300,6 +402,82 @@
         @endif
     </main>
 
+    <script>
+        // Social Functions
+        async function toggleFollow(userId, button) {
+            const isFollowing = button.textContent.trim().includes('Obserwujesz');
+            
+            try {
+                const response = await fetch(`/users/${userId}/${isFollowing ? 'unfollow' : 'follow'}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
 
+                if (response.ok) {
+                    if (isFollowing) {
+                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-blue-600 text-white hover:bg-blue-700';
+                        button.textContent = 'Obserwuj';
+                    } else {
+                        button.className = 'px-2 py-1 text-xs font-medium rounded transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300';
+                        button.textContent = 'Obserwujesz';
+                    }
+                } else {
+                    alert('Błąd podczas zmiany obserwowania');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas zmiany obserwowania');
+            }
+        }
+
+        async function sendFriendRequest(userId, button) {
+            try {
+                const response = await fetch(`/users/${userId}/friend-request`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    button.className = 'px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded';
+                    button.textContent = 'Oczekuje';
+                    button.onclick = null;
+                } else {
+                    alert('Błąd podczas wysyłania zaproszenia');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas wysyłania zaproszenia');
+            }
+        }
+
+        async function acceptFriendRequest(userId, button) {
+            try {
+                const response = await fetch(`/users/${userId}/friend-request`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    button.className = 'px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded';
+                    button.textContent = '✓';
+                    button.onclick = null;
+                } else {
+                    alert('Błąd podczas akceptowania zaproszenia');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas akceptowania zaproszenia');
+            }
+        }
+    </script>
 
 </x-layout>

@@ -62,14 +62,79 @@
                     <div class="flex items-center gap-3">
                         <div
                             class="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-lg font-semibold text-white">
-                            {{ $post->author[0] }}
+                            @if($post->user)
+                                {{ $post->user->name[0] }}
+                            @else
+                                {{ $post->author[0] }}
+                            @endif
                         </div>
                         <div>
-                            <p class="font-semibold text-gray-900">{{ $post->author }}</p>
+                            @if($post->user)
+                                <p class="font-semibold text-gray-900">
+                                    <a href="{{ route('users.profile', $post->user) }}" class="hover:text-indigo-600">
+                                        {{ $post->user->name }}
+                                    </a>
+                                </p>
+                            @else
+                                <p class="font-semibold text-gray-900">{{ $post->author }}</p>
+                            @endif
                             <p class="text-sm text-gray-500">{{ $post->created_at->format('d.m.Y') }} • {{ $post->read_time_minutes ?? 5 }} min czytania</p>
                         </div>
                     </div>
-                    <div class="ml-auto flex flex-wrap gap-2">
+                    
+                    <!-- Social Actions - tylko jeśli to nie jest nasz post i jesteśmy zalogowani -->
+                    @auth
+                        @if($post->user && $post->user->id !== auth()->id())
+                            <div class="flex items-center gap-2 ml-auto mr-4">
+                                @php
+                                    $currentUser = Auth::user();
+                                    $isFollowing = $currentUser->isFollowing($post->user);
+                                    $friendship = \App\Models\Friendship::where(function ($query) use ($currentUser, $post) {
+                                        $query->where('requester_id', $currentUser->id)->where('addressee_id', $post->user->id);
+                                    })->orWhere(function ($query) use ($currentUser, $post) {
+                                        $query->where('requester_id', $post->user->id)->where('addressee_id', $currentUser->id);
+                                    })->first();
+                                    
+                                    $canSendFriendRequest = !$friendship;
+                                    $canAcceptFriendRequest = $friendship && $friendship->status === 'pending' && $friendship->addressee_id === $currentUser->id;
+                                    $isFriend = $friendship && $friendship->status === 'accepted';
+                                    $requestSent = $friendship && $friendship->status === 'pending' && $friendship->requester_id === $currentUser->id;
+                                @endphp
+
+                                <!-- Follow Button -->
+                                <button 
+                                    onclick="toggleFollow({{ $post->user->id }}, this)"
+                                    class="px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200 {{ $isFollowing ? 'bg-gray-200 text-gray-700 hover:bg-gray-300' : 'bg-blue-600 text-white hover:bg-blue-700' }}">
+                                    {{ $isFollowing ? 'Przestań obserwować' : 'Obserwuj' }}
+                                </button>
+
+                                <!-- Friend Button -->
+                                @if($isFriend)
+                                    <span class="px-3 py-1 text-sm font-medium bg-green-100 text-green-700 rounded-md">
+                                        ✓ Znajomy
+                                    </span>
+                                @elseif($canAcceptFriendRequest)
+                                    <button 
+                                        onclick="acceptFriendRequest({{ $post->user->id }}, this)"
+                                        class="px-3 py-1 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700">
+                                        Zaakceptuj
+                                    </button>
+                                @elseif($requestSent)
+                                    <span class="px-3 py-1 text-sm font-medium bg-yellow-100 text-yellow-700 rounded-md">
+                                        Oczekuje
+                                    </span>
+                                @elseif($canSendFriendRequest)
+                                    <button 
+                                        onclick="sendFriendRequest({{ $post->user->id }}, this)"
+                                        class="px-3 py-1 text-sm font-medium bg-green-600 text-white rounded-md hover:bg-green-700">
+                                        Dodaj do znajomych
+                                    </button>
+                                @endif
+                            </div>
+                        @endif
+                    @endauth
+                    
+                    <div class="flex flex-wrap gap-2">
                         <!-- Category -->
                         @if($post->category)
                             <span class="px-4 py-2 text-sm font-semibold rounded-full" 
@@ -457,6 +522,82 @@
                 });
             });
         });
+
+        // Social Functions
+        async function toggleFollow(userId, button) {
+            const isFollowing = button.textContent.trim().includes('Przestań');
+            
+            try {
+                const response = await fetch(`/users/${userId}/${isFollowing ? 'unfollow' : 'follow'}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    if (isFollowing) {
+                        button.className = 'px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200 bg-blue-600 text-white hover:bg-blue-700';
+                        button.textContent = 'Obserwuj';
+                    } else {
+                        button.className = 'px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200 bg-gray-200 text-gray-700 hover:bg-gray-300';
+                        button.textContent = 'Przestań obserwować';
+                    }
+                } else {
+                    alert('Błąd podczas zmiany obserwowania');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas zmiany obserwowania');
+            }
+        }
+
+        async function sendFriendRequest(userId, button) {
+            try {
+                const response = await fetch(`/users/${userId}/friend-request`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    button.className = 'px-3 py-1 text-sm font-medium bg-yellow-100 text-yellow-700 rounded-md';
+                    button.textContent = 'Oczekuje';
+                    button.onclick = null;
+                } else {
+                    alert('Błąd podczas wysyłania zaproszenia');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas wysyłania zaproszenia');
+            }
+        }
+
+        async function acceptFriendRequest(userId, button) {
+            try {
+                const response = await fetch(`/users/${userId}/friend-request`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    button.className = 'px-3 py-1 text-sm font-medium bg-green-100 text-green-700 rounded-md';
+                    button.textContent = '✓ Znajomy';
+                    button.onclick = null;
+                } else {
+                    alert('Błąd podczas akceptowania zaproszenia');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Błąd podczas akceptowania zaproszenia');
+            }
+        }
     </script>
 
 </x-layout>

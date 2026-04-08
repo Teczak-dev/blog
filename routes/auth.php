@@ -56,7 +56,10 @@ Route::middleware('auth')->group(function () {
     Route::put('password', [PasswordController::class, 'update'])->name('password.update');
 
     Route::patch('profile/notifications', [ProfileController::class, 'updateNotifications'])
-        ->name('profile.notifications.update');
+        ->name('profile.notifications');
+
+    Route::post('/users/{user}/mute', [ProfileController::class, 'toggleMute'])
+        ->name('users.mute');
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');

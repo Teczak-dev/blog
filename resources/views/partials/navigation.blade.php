@@ -18,6 +18,18 @@
                     </a>
                     
                     @auth
+                        <a href="{{ route('users.index') }}"
+                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50">
+                            👤 Użytkownicy
+                        </a>
+                        <a href="{{ route('friends.index') }}"
+                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50">
+                            👥 Znajomi
+                        </a>
+                        <a href="{{ route('conversations.index') }}"
+                            class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50">
+                            💬 Wiadomości
+                        </a>
                         <a href="{{ route('dashboard') }}"
                             class="text-gray-700 hover:text-indigo-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-indigo-50">
                             🏠 Dashboard
@@ -94,6 +106,15 @@
                     📚 Wszystkie Posty
                 </a>
                 @auth
+                    <a href="{{ route('users.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        👤 Użytkownicy
+                    </a>
+                    <a href="{{ route('friends.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        👥 Znajomi
+                    </a>
+                    <a href="{{ route('conversations.index') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
+                        💬 Wiadomości
+                    </a>
                     <a href="{{ route('dashboard') }}" class="block px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                         🏠 Dashboard
                     </a>

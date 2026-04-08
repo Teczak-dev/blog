@@ -11,7 +11,13 @@ class PostController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Post::query()->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        $query = Post::with('user')->orderBy('created_at', 'desc')->orderBy('id', 'desc');
+        
+        // Following filter
+        if ($request->get('filter') === 'following' && auth()->check()) {
+            $followingUserIds = auth()->user()->following()->pluck('users.id');
+            $query->whereIn('user_id', $followingUserIds);
+        }
         
         // Global search
         if ($search = $request->get('search')) {
@@ -81,7 +87,7 @@ class PostController extends Controller
 
     public function show(Request $request, string $id)
     {
-        $post = Post::with('comments')->findOrFail($id);
+        $post = Post::with(['comments', 'user'])->findOrFail($id);
         $relatedPosts = $post->getRelatedPosts();
         
         // Get sorting parameter
@@ -190,7 +196,7 @@ class PostController extends Controller
         // Auto-calculate read time if not provided
         $readTime = $request->read_time_minutes ?: Post::calculateReadTime($request->content);
 
-        Post::create([
+        $post = Post::create([
             'title' => $request->title,
             'category' => $category,
             'category_color' => $request->category_color ?: 'blue',
@@ -203,6 +209,9 @@ class PostController extends Controller
             'tags' => $tags,
             'read_time_minutes' => $readTime,
         ]);
+
+        // Dispatch event for followers notification
+        PostCreated::dispatch($post);
 
         return redirect()->route('posts.index')->with('success', 'Post został utworzony!');
     }
