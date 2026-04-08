@@ -116,7 +116,7 @@ async function sendMessage(event, conversationId) {
     if (!content) return;
     
     try {
-        const response = await fetch('{{ route("messages.store") }}', {
+        const response = await fetch('{{ route("messages.store", $conversation) }}', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

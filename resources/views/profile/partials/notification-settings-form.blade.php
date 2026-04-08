@@ -33,13 +33,13 @@
                 <div class="flex items-center h-5">
                     <input id="email_notifications" name="email_notifications" type="checkbox" 
                            value="1" {{ old('email_notifications', $user->email_notifications) ? 'checked' : '' }}
-                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
                 </div>
                 <div class="ml-3 text-sm">
-                    <label for="email_notifications" class="font-medium text-gray-700">
+                    <label for="email_notifications" class="font-medium text-gray-700 dark:text-gray-300">
                         Powiadomienia email (główne)
                     </label>
-                    <p class="text-gray-500">Otrzymuj powiadomienia na adres email. Musi być włączone dla pozostałych opcji.</p>
+                    <p class="text-gray-500 dark:text-gray-400">Otrzymuj powiadomienia na adres email. Musi być włączone dla pozostałych opcji.</p>
                 </div>
             </div>
 
@@ -48,13 +48,13 @@
                 <div class="flex items-center h-5">
                     <input id="notify_new_posts" name="notify_new_posts" type="checkbox" 
                            value="1" {{ old('notify_new_posts', $user->notify_new_posts) ? 'checked' : '' }}
-                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
                 </div>
                 <div class="ml-3 text-sm">
-                    <label for="notify_new_posts" class="font-medium text-gray-700">
+                    <label for="notify_new_posts" class="font-medium text-gray-700 dark:text-gray-300">
                         Nowe posty od obserwowanych
                     </label>
-                    <p class="text-gray-500">Powiadamiaj o nowych postach od użytkowników, których obserwujesz.</p>
+                    <p class="text-gray-500 dark:text-gray-400">Powiadamiaj o nowych postach od użytkowników, których obserwujesz.</p>
                 </div>
             </div>
 
@@ -63,13 +63,13 @@
                 <div class="flex items-center h-5">
                     <input id="notify_messages" name="notify_messages" type="checkbox" 
                            value="1" {{ old('notify_messages', $user->notify_messages) ? 'checked' : '' }}
-                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
                 </div>
                 <div class="ml-3 text-sm">
-                    <label for="notify_messages" class="font-medium text-gray-700">
+                    <label for="notify_messages" class="font-medium text-gray-700 dark:text-gray-300">
                         Nowe wiadomości prywatne
                     </label>
-                    <p class="text-gray-500">Powiadamiaj o nowych wiadomościach od znajomych w czacie.</p>
+                    <p class="text-gray-500 dark:text-gray-400">Powiadamiaj o nowych wiadomościach od znajomych w czacie.</p>
                 </div>
             </div>
 
@@ -78,27 +78,27 @@
                 <div class="flex items-center h-5">
                     <input id="notify_friend_requests" name="notify_friend_requests" type="checkbox" 
                            value="1" {{ old('notify_friend_requests', $user->notify_friend_requests) ? 'checked' : '' }}
-                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 rounded">
+                           class="focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded">
                 </div>
                 <div class="ml-3 text-sm">
-                    <label for="notify_friend_requests" class="font-medium text-gray-700">
+                    <label for="notify_friend_requests" class="font-medium text-gray-700 dark:text-gray-300">
                         Zaproszenia do znajomych
                     </label>
-                    <p class="text-gray-500">Powiadamiaj o nowych zaproszeniach do znajomych.</p>
+                    <p class="text-gray-500 dark:text-gray-400">Powiadamiaj o nowych zaproszeniach do znajomych.</p>
                 </div>
             </div>
         </div>
 
         @if($user->muted_users && count($user->muted_users) > 0)
-            <div class="border-t pt-4">
-                <h3 class="text-sm font-medium text-gray-900 mb-3">Wyciszeni użytkownicy</h3>
+            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                <h3 class="text-sm font-medium text-gray-900 dark:text-gray-100 mb-3">Wyciszeni użytkownicy</h3>
                 <div class="space-y-2">
                     @foreach(App\Models\User::whereIn('id', $user->muted_users)->get() as $mutedUser)
-                        <div class="flex items-center justify-between p-2 bg-gray-50 rounded">
-                            <span class="text-sm text-gray-700">{{ $mutedUser->name }}</span>
+                        <div class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded">
+                            <span class="text-sm text-gray-700 dark:text-gray-200">{{ $mutedUser->name }}</span>
                             <button type="button" 
                                     onclick="toggleMute({{ $mutedUser->id }})"
-                                    class="text-xs bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded">
+                                    class="text-xs bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 text-gray-700 dark:text-gray-200 px-2 py-1 rounded">
                                 Odcisz
                             </button>
                         </div>
@@ -108,16 +108,16 @@
         @endif
 
         @if (!$user->hasVerifiedEmail())
-            <div class="rounded-md bg-yellow-50 p-4">
+            <div class="rounded-md bg-yellow-50 dark:bg-yellow-900/20 p-4">
                 <div class="flex">
-                    <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg class="h-5 w-5 text-yellow-400 dark:text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
                         <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
                     </svg>
                     <div class="ml-3">
-                        <h3 class="text-sm font-medium text-yellow-800">
+                        <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
                             Email nie został zweryfikowany
                         </h3>
-                        <p class="mt-1 text-sm text-yellow-700">
+                        <p class="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
                             Aby otrzymywać powiadomienia, musisz najpierw zweryfikować swój adres email.
                         </p>
                     </div>
@@ -130,7 +130,7 @@
 
             @if (session('status') === 'notification-preferences-updated')
                 <p x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 2000)"
-                   class="text-sm text-gray-600">{{ __('Zapisano.') }}</p>
+                   class="text-sm text-gray-600 dark:text-gray-400">{{ __('Zapisano.') }}</p>
             @endif
         </div>
     </form>

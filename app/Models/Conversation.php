@@ -80,9 +80,9 @@ class Conversation extends Model
      */
     public function markAsReadForUser(User $user): void
     {
-        $this->participants()
-             ->where('users.id', $user->id)
-             ->update(['last_read_at' => now()]);
+        $this->participants()->updateExistingPivot($user->id, [
+            'last_read_at' => now(),
+        ]);
     }
 
     /**
@@ -120,7 +120,7 @@ class Conversation extends Model
     {
         return $this->participants()
                     ->where('users.id', $user->id)
-                    ->whereNull('left_at')
+                    ->whereNull('conversation_participants.left_at')
                     ->exists();
     }
 
@@ -142,9 +142,9 @@ class Conversation extends Model
      */
     public function removeParticipant(User $user): void
     {
-        $this->participants()
-             ->where('users.id', $user->id)
-             ->update(['left_at' => now()]);
+        $this->participants()->updateExistingPivot($user->id, [
+            'left_at' => now(),
+        ]);
     }
 
     /**
@@ -178,10 +178,12 @@ class Conversation extends Model
     {
         return static::where('type', 'private')
                     ->whereHas('participants', function ($query) use ($user1) {
-                        $query->where('users.id', $user1->id)->whereNull('left_at');
+                        $query->where('users.id', $user1->id)
+                              ->whereNull('conversation_participants.left_at');
                     })
                     ->whereHas('participants', function ($query) use ($user2) {
-                        $query->where('users.id', $user2->id)->whereNull('left_at');
+                        $query->where('users.id', $user2->id)
+                              ->whereNull('conversation_participants.left_at');
                     })
                     ->first();
     }

@@ -1,5 +1,5 @@
     <!-- Footer -->
-    <footer class="bg-gray-800 dark:bg-gray-900 text-white mt-16">
+    <footer class="bg-gray-800 dark:bg-gray-900 text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div class="text-center">
                 <p class="text-gray-400 dark:text-gray-500">© 2026 Mikołaj Sobczak. Blog stworzony przy użyciu Laravel</p>

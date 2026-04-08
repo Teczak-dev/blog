@@ -81,7 +81,8 @@ class ConversationController extends Controller
         }
         
         // Create new conversation
-        $conversation = $user->startConversation([$recipientId]);
+        $recipient = User::findOrFail($recipientId);
+        $conversation = Conversation::createPrivate($user, $recipient);
         
         return redirect()->route('conversations.show', $conversation);
     }
