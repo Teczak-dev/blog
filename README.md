@@ -11,6 +11,60 @@ A blog application built with Laravel 12, Filament v5, and Tailwind CSS v4. Feat
 - **SQLite** (default)
 - **Pest** 4 (testing)
 
+## Project Features
+
+### Authentication and account
+
+- Registration, login, logout
+- Password reset flow (forgot/reset password)
+- Email verification
+- User profile edit/update/delete
+- Notification preferences in profile (email notifications, post/message/friend request toggles)
+- Theme preference update (light/dark/system)
+
+### Posts
+
+- Public posts list (`/`, `/posts`)
+- Post details page (`/posts/{id}`)
+- Authenticated post creation and editing
+- Post categories, read time, optional photo upload
+
+### Comments
+
+- Add comments under posts (guest and authenticated users)
+- Nested replies to top-level comments
+- Guest comments/replies require moderation, authenticated users are auto-approved
+- Load more comments
+- Like/dislike voting on comments (authenticated users)
+- Sorting comments (newest/oldest/most liked)
+
+### Social features
+
+- User discovery page (`/users`)
+- User profile page with followers/following/friends views
+- Follow/unfollow users
+- Send/accept/reject/cancel/remove friendship requests
+- Friend requests and friends management pages
+
+### Messaging
+
+- Conversations list and conversation detail view
+- Start private conversation
+- Send, edit, delete messages
+- Mark conversation/message as read
+- Unread messages counter
+- Leave conversation
+
+### UI/UX
+
+- Dark mode across application pages and components
+- Responsive layouts for posts, users, friends, profile, and conversations
+
+### Admin/maintenance
+
+- Filament admin panel integration
+- Automated tests with Pest
+
 ## Installation
 
 ```bash

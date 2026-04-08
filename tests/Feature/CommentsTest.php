@@ -19,7 +19,8 @@ it('can display comments on post page', function () {
     $response->assertSuccessful();
     $response->assertSee('Jan Kowalski');
     $response->assertSee('Test comment content');
-    $response->assertSee('Komentarze (1)');
+    $response->assertSee('Komentarze (');
+    $response->assertSee('id="comments-count-value">1<', false);
 });
 
 it('can add a comment to a post', function () {
@@ -72,7 +73,8 @@ it('displays empty state when no comments', function () {
     $response = $this->get("/posts/{$post->id}");
 
     $response->assertSuccessful();
-    $response->assertSee('Komentarze (0)');
+    $response->assertSee('Komentarze (');
+    $response->assertSee('id="comments-count-value">0<', false);
     $response->assertSee('Brak komentarzy');
 });
 

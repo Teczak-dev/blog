@@ -125,6 +125,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Add comment to the page dynamically for logged users
                     if (data.comment && data.comment.is_approved) {
                         const commentsContainer = document.getElementById('comments-list');
+                        if (!commentsContainer) {
+                            window.location.reload();
+                            return;
+                        }
                         const commentHtml = `
                             <div class="flex gap-4 mb-6">
                                 <div class="flex-shrink-0">
@@ -149,10 +153,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
                         
                         // Update comment count
-                        const commentCountElement = document.querySelector('h2:contains("Komentarze")');
+                        const commentCountElement = document.getElementById('comments-count-value');
                         if (commentCountElement) {
-                            const currentCount = parseInt(commentCountElement.textContent.match(/\d+/)[0]);
-                            commentCountElement.textContent = commentCountElement.textContent.replace(/\d+/, currentCount + 1);
+                            const currentCount = parseInt(commentCountElement.textContent, 10) || 0;
+                            commentCountElement.textContent = String(currentCount + 1);
                         }
                     }
                     

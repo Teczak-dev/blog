@@ -202,7 +202,7 @@
         <section class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-8">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                    Komentarze ({{ $post->approvedComments()->topLevel()->count() }})
+                    Komentarze (<span id="comments-count-value">{{ $post->approvedComments()->topLevel()->count() }}</span>)
                 </h2>
                 
                 <!-- Sort Dropdown -->
@@ -424,74 +424,72 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Vote script loaded');
             
-            const voteButtons = document.querySelectorAll('.vote-btn');
-            console.log('Found vote buttons:', voteButtons.length);
-            
-            // Handle voting
-            voteButtons.forEach(btn => {
-                console.log('Attaching listener to button:', btn);
-                btn.addEventListener('click', async function(e) {
-                    e.preventDefault();
-                    
-                    const commentId = this.dataset.commentId;
-                    const voteType = this.dataset.voteType;
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
-                    
-                    console.log('Vote clicked:', { commentId, voteType, csrfToken });
-                    
-                    if (!csrfToken) {
-                        console.error('CSRF token not found!');
-                        alert('Błąd: Brak tokenu CSRF. Odśwież stronę.');
-                        return;
+            // Handle voting (event delegation for current and future comment nodes)
+            document.addEventListener('click', async function (e) {
+                const button = e.target.closest('.vote-btn');
+                if (!button) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                const commentId = button.dataset.commentId;
+                const voteType = button.dataset.voteType;
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+                if (!csrfToken) {
+                    alert('Błąd: Brak tokenu CSRF. Odśwież stronę.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/comments/${commentId}/vote`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({ vote_type: voteType })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Vote request failed');
                     }
-                    
-                    try {
-                        const response = await fetch(`/comments/${commentId}/vote`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json',
-                            },
-                            body: JSON.stringify({ vote_type: voteType })
-                        });
-                        
-                        console.log('Response status:', response.status);
-                        const data = await response.json();
-                        console.log('Response data:', data);
-                        
-                        if (data.success) {
-                            // Update counters
-                            const commentEl = document.getElementById(`comment-${commentId}`);
-                            commentEl.querySelector('.likes-count').textContent = data.likes_count;
-                            commentEl.querySelector('.dislikes-count').textContent = data.dislikes_count;
-                            
-                            // Update button states
-                            const likeBtn = commentEl.querySelector('[data-vote-type="like"]');
-                            const dislikeBtn = commentEl.querySelector('[data-vote-type="dislike"]');
-                            const likeSvg = likeBtn.querySelector('svg');
-                            const dislikeSvg = dislikeBtn.querySelector('svg');
-                            
-                            // Reset both buttons
-                            likeSvg.classList.remove('fill-green-600', 'text-green-600');
-                            dislikeSvg.classList.remove('fill-red-600', 'text-red-600');
-                            likeBtn.removeAttribute('data-active');
-                            dislikeBtn.removeAttribute('data-active');
-                            
-                            // Highlight active vote
-                            if (data.user_vote === 'like') {
-                                likeSvg.classList.add('fill-green-600', 'text-green-600');
-                                likeBtn.setAttribute('data-active', 'true');
-                            } else if (data.user_vote === 'dislike') {
-                                dislikeSvg.classList.add('fill-red-600', 'text-red-600');
-                                dislikeBtn.setAttribute('data-active', 'true');
-                            }
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        const commentEl = document.getElementById(`comment-${commentId}`);
+                        if (!commentEl) {
+                            return;
                         }
-                    } catch (error) {
-                        console.error('Vote error:', error);
-                        alert('Wystąpił błąd podczas głosowania. Spróbuj ponownie.');
+
+                        commentEl.querySelector('.likes-count').textContent = data.likes_count;
+                        commentEl.querySelector('.dislikes-count').textContent = data.dislikes_count;
+
+                        const likeBtn = commentEl.querySelector('[data-vote-type="like"]');
+                        const dislikeBtn = commentEl.querySelector('[data-vote-type="dislike"]');
+                        const likeSvg = likeBtn.querySelector('svg');
+                        const dislikeSvg = dislikeBtn.querySelector('svg');
+
+                        likeSvg.classList.remove('fill-green-600', 'text-green-600', 'dark:fill-green-400', 'dark:text-green-400');
+                        dislikeSvg.classList.remove('fill-red-600', 'text-red-600', 'dark:fill-red-400', 'dark:text-red-400');
+                        likeBtn.removeAttribute('data-active');
+                        dislikeBtn.removeAttribute('data-active');
+
+                        if (data.user_vote === 'like') {
+                            likeSvg.classList.add('fill-green-600', 'text-green-600', 'dark:fill-green-400', 'dark:text-green-400');
+                            likeBtn.setAttribute('data-active', 'true');
+                        } else if (data.user_vote === 'dislike') {
+                            dislikeSvg.classList.add('fill-red-600', 'text-red-600', 'dark:fill-red-400', 'dark:text-red-400');
+                            dislikeBtn.setAttribute('data-active', 'true');
+                        }
                     }
-                });
+                } catch (error) {
+                    console.error('Vote error:', error);
+                    alert('Wystąpił błąd podczas głosowania. Spróbuj ponownie.');
+                }
             });
             
             // Handle reply toggle

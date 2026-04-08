@@ -1,10 +1,10 @@
 <x-app-layout>
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden h-screen max-h-[80vh]">
-                <div class="flex h-full">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden min-h-[70vh] md:h-screen md:max-h-[80vh]">
+                <div class="flex flex-col md:flex-row h-full">
                     <!-- Conversations Sidebar -->
-                    <div class="w-80 border-r border-gray-200 dark:border-gray-700 flex flex-col">
+                    <div class="w-full md:w-80 md:min-w-80 border-b md:border-b-0 md:border-r border-gray-200 dark:border-gray-700 flex flex-col">
                         <!-- Header -->
                         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                             <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Wiadomości</h1>
@@ -74,7 +74,7 @@
                     </div>
 
                     <!-- Chat Area -->
-                    <div class="flex-1 flex flex-col">
+                    <div class="flex-1 flex flex-col min-h-[50vh]">
                         @if(isset($currentConversation))
                             @include('conversations.chat', ['conversation' => $currentConversation])
                         @else
@@ -102,16 +102,16 @@
                 <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div class="inline-block align-bottom bg-white dark:bg-gray-800 rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                 <div class="sm:flex sm:items-start">
                     <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900 mb-4">Nowa rozmowa</h3>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-4">Nowa rozmowa</h3>
                         
                         <form id="newConversationForm" method="POST" action="{{ route('conversations.create') }}">
                             @csrf
                             <div class="mb-4">
-                                <label for="user_id" class="block text-sm font-medium text-gray-700 mb-2">Wybierz użytkownika:</label>
-                                <select name="user_id" id="user_id" required class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
+                                <label for="user_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Wybierz użytkownika:</label>
+                                <select name="user_id" id="user_id" required class="w-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500">
                                     <option value="">-- Wybierz użytkownika --</option>
                                     @foreach($allUsers->where('id', '!=', auth()->id()) as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
@@ -121,7 +121,7 @@
 
                             <div class="flex justify-end space-x-3">
                                 <button type="button" onclick="hideNewConversationModal()" 
-                                        class="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                        class="px-4 py-2 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700">
                                     Anuluj
                                 </button>
                                 <button type="submit" 

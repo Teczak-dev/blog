@@ -40,7 +40,7 @@
 <!-- Messages Area -->
 <div id="messagesContainer" class="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-900 space-y-4">
     @forelse($conversation->messages->sortBy('created_at') as $message)
-        <div class="flex {{ $message->user_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
+        <div data-message-id="{{ $message->id }}" class="flex {{ $message->user_id === auth()->id() ? 'justify-end' : 'justify-start' }}">
             <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg {{ $message->user_id === auth()->id() ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100' }}">
                 @if($message->user_id !== auth()->id())
                     <p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">{{ $message->user->name }}</p>
@@ -85,7 +85,7 @@
 
 <!-- Message Input -->
 <div class="p-6 border-t border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800">
-    <form id="messageForm" onsubmit="sendMessage(event, {{ $conversation->id }})" class="flex gap-3">
+    <form id="messageForm" onsubmit="sendMessage(event, {{ $conversation->id }})" class="flex items-end gap-3">
         @csrf
         <input type="hidden" name="conversation_id" value="{{ $conversation->id }}">
         
@@ -106,6 +106,46 @@
 </div>
 
 <script>
+const currentUserId = {{ auth()->id() }};
+
+function getLastRenderedMessageId() {
+    const nodes = document.querySelectorAll('#messagesContainer [data-message-id]');
+    if (!nodes.length) {
+        return 0;
+    }
+
+    const last = nodes[nodes.length - 1];
+    return Number(last.dataset.messageId) || 0;
+}
+
+function appendMessageBubble(message) {
+    const messagesContainer = document.getElementById('messagesContainer');
+    if (!messagesContainer) {
+        return;
+    }
+
+    const isOwn = Number(message.user_id) === Number(currentUserId);
+    const authorName = message.user?.name ?? 'Użytkownik';
+    const date = new Date(message.created_at);
+    const formattedTime = date.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+
+    const wrapper = document.createElement('div');
+    wrapper.dataset.messageId = String(message.id);
+    wrapper.className = `flex ${isOwn ? 'justify-end' : 'justify-start'}`;
+    wrapper.innerHTML = `
+        <div class="max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${isOwn ? 'bg-blue-600 dark:bg-blue-500 text-white' : 'bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100'}">
+            ${!isOwn ? `<p class="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">${authorName}</p>` : ''}
+            <p class="text-sm">${message.content}</p>
+            <div class="flex items-center justify-between mt-2">
+                <span class="text-xs ${isOwn ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'}">${formattedTime}</span>
+            </div>
+        </div>
+    `;
+
+    messagesContainer.appendChild(wrapper);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
 async function sendMessage(event, conversationId) {
     event.preventDefault();
     
@@ -130,9 +170,11 @@ async function sendMessage(event, conversationId) {
         });
         
         if (response.ok) {
+            const data = await response.json();
             messageInput.value = '';
-            // Refresh the page to show the new message
-            window.location.reload();
+            if (data?.message) {
+                appendMessageBubble(data.message);
+            }
         } else {
             alert('Błąd podczas wysyłania wiadomości');
         }
@@ -153,8 +195,7 @@ async function markAllAsRead(conversationId) {
         });
         
         if (response.ok) {
-            // Refresh to update read status
-            window.location.reload();
+            return;
         }
     } catch (error) {
         console.error('Error marking as read:', error);
@@ -167,5 +208,40 @@ document.addEventListener('DOMContentLoaded', function() {
     if (messagesContainer) {
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
+
+    // Poll for new messages to avoid manual refresh when someone else sends one.
+    const conversationId = {{ $conversation->id }};
+    let pollingInProgress = false;
+
+    setInterval(async () => {
+        if (pollingInProgress) {
+            return;
+        }
+
+        pollingInProgress = true;
+        try {
+            const response = await fetch(`/conversations/${conversationId}/messages`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                return;
+            }
+
+            const data = await response.json();
+            const lastId = getLastRenderedMessageId();
+
+            const orderedMessages = [...(data.messages ?? [])].reverse();
+            orderedMessages
+                .filter((message) => Number(message.id) > lastId)
+                .forEach((message) => appendMessageBubble(message));
+        } catch (error) {
+            console.error('Error polling messages:', error);
+        } finally {
+            pollingInProgress = false;
+        }
+    }, 6000);
 });
 </script>
