@@ -1,15 +1,15 @@
 <x-app-layout>
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden h-screen max-h-[80vh]">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden h-screen max-h-[80vh]">
                 <div class="flex h-full">
                     <!-- Conversations Sidebar -->
-                    <div class="w-80 border-r border-gray-200 flex flex-col">
+                    <div class="w-80 border-r border-gray-200 dark:border-gray-700 flex flex-col">
                         <!-- Header -->
-                        <div class="p-6 border-b border-gray-200">
-                            <h1 class="text-xl font-semibold text-gray-900">Wiadomości</h1>
+                        <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                            <h1 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Wiadomości</h1>
                             <button onclick="showNewConversationModal()" 
-                                    class="mt-3 w-full bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                                    class="mt-3 w-full bg-blue-600 dark:bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors">
                                 <div class="flex items-center justify-center gap-2">
                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -22,12 +22,12 @@
                         <!-- Conversations List -->
                         <div class="flex-1 overflow-y-auto">
                             @forelse($conversations as $conversation)
-                                <div class="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                <div class="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                     <a href="{{ route('conversations.show', $conversation) }}" 
-                                       class="block p-4 {{ request()->route('conversation')?->id === $conversation->id ? 'bg-blue-50 border-r-2 border-blue-500' : '' }}">
+                                       class="block p-4 {{ request()->route('conversation')?->id === $conversation->id ? 'bg-blue-50 dark:bg-blue-900/30 border-r-2 border-blue-500' : '' }}">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1">
-                                                <h3 class="font-medium text-gray-900 truncate">
+                                                <h3 class="font-medium text-gray-900 dark:text-gray-100 truncate">
                                                     @if($conversation->title)
                                                         {{ $conversation->title }}
                                                     @else
@@ -62,8 +62,8 @@
                                     </a>
                                 </div>
                             @empty
-                                <div class="p-6 text-center text-gray-500">
-                                    <svg class="w-12 h-12 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <div class="p-6 text-center text-gray-500 dark:text-gray-400">
+                                    <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.456L3 21l2.456-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"/>
                                     </svg>
                                     <p>Brak rozmów</p>
@@ -79,13 +79,13 @@
                             @include('conversations.chat', ['conversation' => $currentConversation])
                         @else
                             <!-- Welcome Screen -->
-                            <div class="flex-1 flex items-center justify-center bg-gray-50">
+                            <div class="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
                                 <div class="text-center">
-                                    <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-3.582 8-8 8a8.959 8.959 0 01-4.906-1.456L3 21l2.456-5.094A8.959 8.959 0 013 12c0-4.418 3.582-8 8-8s8 3.582 8 8z"/>
                                     </svg>
-                                    <h3 class="text-lg font-medium text-gray-900 mb-2">Wybierz rozmowę</h3>
-                                    <p class="text-gray-500">Wybierz rozmowę z listy lub rozpocznij nową</p>
+                                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Wybierz rozmowę</h3>
+                                    <p class="text-gray-500 dark:text-gray-400">Wybierz rozmowę z listy lub rozpocznij nową</p>
                                 </div>
                             </div>
                         @endif

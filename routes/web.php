@@ -83,4 +83,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/messages/unread-count', [\App\Http\Controllers\MessageController::class, 'unreadCount'])->name('messages.unread-count');
 });
 
+// Theme routes (available for all users)
+Route::post('/theme/update', [\App\Http\Controllers\ThemeController::class, 'update'])->name('theme.update');
+
 require __DIR__.'/auth.php';

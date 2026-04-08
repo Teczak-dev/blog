@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl" class="h-full bg-gray-50">
+<html lang="pl" class="h-full bg-gray-50 dark:bg-gray-900">
 
 <head>
     <meta charset="UTF-8">
@@ -17,12 +17,12 @@
     @if(app()->environment('local'))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @else
-        <link rel="stylesheet" href="{{ asset('build/assets/app-CDN8Lmid.css') }}">
+        <link rel="stylesheet" href="{{ asset('build/assets/app-BwTzgqNR.css') }}">
         <script type="module" src="{{ asset('build/assets/app-BFW7sici.js') }}"></script>
     @endif
 </head>
 
-<body class="h-full">
+<body class="h-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     @include('partials.navigation')
 
     {{ $slot }}

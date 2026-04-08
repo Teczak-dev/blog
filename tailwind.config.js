@@ -10,6 +10,8 @@ export default {
         './resources/views/**/*.blade.php',
     ],
 
+    darkMode: 'class', // Enable dark mode with class strategy
+
     safelist: [
         // Category color classes with !important modifiers to force application
         '!bg-blue-500', '!text-white',

@@ -32,6 +32,7 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         'notify_messages', 
         'notify_friend_requests',
         'muted_users',
+        'theme_preference',
     ];
 
     /**
@@ -260,5 +261,39 @@ class User extends Authenticatable implements FilamentUser, MustVerifyEmail
         $mutedUsers = $this->muted_users ?? [];
         $mutedUsers = array_values(array_filter($mutedUsers, fn($id) => $id !== $user->id));
         $this->update(['muted_users' => $mutedUsers]);
+    }
+
+    /**
+     * Get unread messages count
+     */
+    public function getUnreadMessagesCount(): int
+    {
+        return $this->conversations()
+                   ->join('messages', 'conversations.id', '=', 'messages.conversation_id')
+                   ->whereNull('messages.deleted_at')
+                   ->where('messages.user_id', '!=', $this->id)
+                   ->where(function($query) {
+                       $query->whereNull('conversation_participants.last_read_at')
+                             ->orWhere('messages.created_at', '>', 'conversation_participants.last_read_at');
+                   })
+                   ->count();
+    }
+
+    /**
+     * Get pending friend requests count (received by this user)
+     */
+    public function getPendingFriendRequestsCount(): int
+    {
+        return $this->receivedFriendRequests()
+                   ->where('status', 'pending')
+                   ->count();
+    }
+
+    /**
+     * Check if user has any notifications
+     */
+    public function hasNotifications(): bool
+    {
+        return $this->getUnreadMessagesCount() > 0 || $this->getPendingFriendRequestsCount() > 0;
     }
 }

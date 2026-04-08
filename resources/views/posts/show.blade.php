@@ -1,11 +1,11 @@
 <x-layout>
     <!-- Main Content with modern background -->
-    <main class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
+    <main class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             
             <!-- Back navigation -->
             <div class="mb-6">
-                <a href="{{ route('posts.index') }}" class="inline-flex items-center gap-2 text-gray-600 hover:text-indigo-600 transition-colors duration-200 bg-white/50 backdrop-blur-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg">
+                <a href="{{ route('posts.index') }}" class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm px-4 py-2 rounded-xl shadow-md hover:shadow-lg border dark:border-gray-700">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
                     </svg>
@@ -14,7 +14,7 @@
             </div>
 
             <!-- Post Header -->
-            <article class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 overflow-hidden mb-8">
+            <article class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 overflow-hidden mb-8">
             <!-- Featured Image -->
             <div class="h-96 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
                 @if ($post->photo)
@@ -32,7 +32,7 @@
                     
                     @if (auth()->check() && auth()->id() === $post->user_id)
                         <a href="{{ route('posts.edit', $post->id) }}" 
-                           class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                           class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                             </svg>
@@ -43,10 +43,10 @@
 
                 <!-- Success Message -->
                 @if (session('success'))
-                    <div class="mb-6 bg-green-50 border-l-4 border-green-400 p-4">
+                    <div class="mb-6 bg-green-50 dark:bg-green-900/30 border-l-4 border-green-400 dark:border-green-500 p-4">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                <svg class="h-5 w-5 text-green-400 dark:text-green-500" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
                                 </svg>
                             </div>
@@ -58,10 +58,10 @@
                 @endif
                 
                 <!-- Meta Info -->
-                <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200">
+                <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-lg font-semibold text-white">
+                            class="w-12 h-12 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 rounded-full flex items-center justify-center text-lg font-semibold text-white">
                             @if($post->user)
                                 {{ $post->user->name[0] }}
                             @else
@@ -70,15 +70,15 @@
                         </div>
                         <div>
                             @if($post->user)
-                                <p class="font-semibold text-gray-900">
-                                    <a href="{{ route('users.profile', $post->user) }}" class="hover:text-indigo-600">
+                                <p class="font-semibold text-gray-900 dark:text-gray-100">
+                                    <a href="{{ route('users.profile', $post->user) }}" class="hover:text-indigo-600 dark:hover:text-indigo-400">
                                         {{ $post->user->name }}
                                     </a>
                                 </p>
                             @else
-                                <p class="font-semibold text-gray-900">{{ $post->author }}</p>
+                                <p class="font-semibold text-gray-900 dark:text-gray-100">{{ $post->author }}</p>
                             @endif
-                            <p class="text-sm text-gray-500">{{ $post->created_at->format('d.m.Y') }} • {{ $post->read_time_minutes ?? 5 }} min czytania</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $post->created_at->format('d.m.Y') }} • {{ $post->read_time_minutes ?? 5 }} min czytania</p>
                         </div>
                     </div>
                     
@@ -146,20 +146,20 @@
                 </div>
 
                 <!-- Title -->
-                <h1 class="text-4xl font-bold text-gray-900 mb-4">
+                <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                     {{ $post->title }}
                 </h1>
 
                 @if ($post->lead)
                     <!-- Lead -->
-                    <div class="text-xl text-gray-600 mb-8 leading-relaxed">
+                    <div class="text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
                         {!! $post->lead !!}
                     </div>
                 @endif
 
                 <!-- Content -->
                 <div class="prose prose-lg max-w-none">
-                    <div class="text-gray-700 mb-4 leading-relaxed whitespace-pre-line">
+                    <div class="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed whitespace-pre-line">
                         {!! $post->content !!}
                     </div>
                 </div>
@@ -199,16 +199,16 @@
         </article>
 
         <!-- Comments Section -->
-        <section class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 p-8">
+        <section class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/50 dark:border-gray-700/50 p-8">
             <div class="flex items-center justify-between mb-6">
-                <h2 class="text-2xl font-bold text-gray-900">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                     Komentarze ({{ $post->approvedComments()->topLevel()->count() }})
                 </h2>
                 
                 <!-- Sort Dropdown -->
                 <div class="relative">
                     <select id="comment-sort" 
-                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
+                            class="px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-sm"
                             onchange="window.location.href = '{{ route('posts.show', $post->id) }}?sort=' + this.value">
                         <option value="newest" {{ $sort === 'newest' ? 'selected' : '' }}>Najnowsze</option>
                         <option value="oldest" {{ $sort === 'oldest' ? 'selected' : '' }}>Najstarsze</option>
@@ -218,34 +218,34 @@
             </div>
 
             <!-- Comment Form -->
-            <div class="mb-8 pb-8 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-900 mb-4">Dodaj komentarz</h3>
+            <div class="mb-8 pb-8 border-b border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Dodaj komentarz</h3>
                 
                 @if (auth()->check())
                     <!-- Logged user form -->
                     <form method="POST" action="{{ route('comments.store', $post->id) }}" class="space-y-4">
                         @csrf
                         <div>
-                            <label for="content" class="block text-sm font-medium text-gray-700 mb-2">
+                            <label for="content" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Komentarz *
                             </label>
                             <textarea id="content" name="content" required rows="4"
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
+                                class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
                                 placeholder="Podziel się swoimi przemyśleniami...">{{ old('content') }}</textarea>
                             @error('content')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="flex items-center gap-4">
                             <button type="submit"
-                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl">
+                                class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 dark:from-indigo-500 dark:to-purple-500 text-white font-medium rounded-xl hover:from-indigo-700 hover:to-purple-700 dark:hover:from-indigo-600 dark:hover:to-purple-600 transition-all duration-200 shadow-lg hover:shadow-xl">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                                 </svg>
                                 Opublikuj komentarz
                             </button>
-                            <p class="text-sm text-gray-500">Zalogowany jako <strong>{{ auth()->user()->name }}</strong></p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Zalogowany jako <strong>{{ auth()->user()->name }}</strong></p>
                         </div>
                     </form>
                 @else
