@@ -59,11 +59,31 @@ class MessageController extends Controller
             'type' => 'in:text,image,file',
         ]);
 
+        $messageType = $request->type ?? 'text';
+
+        $recentDuplicate = Message::where('conversation_id', $conversation->id)
+            ->where('user_id', $user->id)
+            ->where('content', $request->content)
+            ->where('type', $messageType)
+            ->where('created_at', '>=', now()->subSeconds(3))
+            ->latest('id')
+            ->first();
+
+        if ($recentDuplicate) {
+            $recentDuplicate->loadMissing('user:id,name');
+
+            return response()->json([
+                'success' => true,
+                'message' => $recentDuplicate,
+                'deduplicated' => true,
+            ]);
+        }
+
         $message = Message::create([
             'conversation_id' => $conversation->id,
             'user_id' => $user->id,
             'content' => $request->content,
-            'type' => $request->type ?? 'text',
+            'type' => $messageType,
         ]);
 
         $message->load('user:id,name');

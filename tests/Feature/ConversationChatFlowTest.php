@@ -38,3 +38,26 @@ it('allows participant to send a message to conversation', function () {
     ]);
 });
 
+it('deduplicates rapid duplicate message submissions', function () {
+    $user1 = User::factory()->create();
+    $user2 = User::factory()->create();
+
+    $conversation = Conversation::createPrivate($user1, $user2);
+    $payload = ['content' => 'Szybka podwojna wiadomosc'];
+
+    $this->actingAs($user1)
+        ->post(route('messages.store', $conversation), $payload, ['Accept' => 'application/json'])
+        ->assertCreated()
+        ->assertJsonPath('success', true);
+
+    $this->actingAs($user1)
+        ->post(route('messages.store', $conversation), $payload, ['Accept' => 'application/json'])
+        ->assertOk()
+        ->assertJsonPath('success', true)
+        ->assertJsonPath('deduplicated', true);
+
+    expect($conversation->messages()
+        ->where('user_id', $user1->id)
+        ->where('content', $payload['content'])
+        ->count())->toBe(1);
+});

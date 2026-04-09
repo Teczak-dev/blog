@@ -107,6 +107,7 @@
 
 <script>
 const currentUserId = {{ auth()->id() }};
+let sendingInProgress = false;
 
 function getLastRenderedMessageId() {
     const nodes = document.querySelectorAll('#messagesContainer [data-message-id]');
@@ -148,12 +149,23 @@ function appendMessageBubble(message) {
 
 async function sendMessage(event, conversationId) {
     event.preventDefault();
+
+    if (sendingInProgress) {
+        return;
+    }
     
     const form = event.target;
     const messageInput = form.querySelector('#messageInput');
+    const submitButton = form.querySelector('button[type="submit"]');
     const content = messageInput.value.trim();
     
     if (!content) return;
+
+    sendingInProgress = true;
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+    }
     
     try {
         const response = await fetch('{{ route("messages.store", $conversation) }}', {
@@ -181,6 +193,12 @@ async function sendMessage(event, conversationId) {
     } catch (error) {
         console.error('Error:', error);
         alert('Błąd podczas wysyłania wiadomości');
+    } finally {
+        sendingInProgress = false;
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
     }
 }
 
